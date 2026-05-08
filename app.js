@@ -1,0 +1,235 @@
+async function loadData() {
+  const res = await fetch("data.json", { cache: "no-store" });
+  return res.json();
+}
+
+function compositeScore(scores) {
+  const values = Object.values(scores).filter((v) => typeof v === "number");
+  if (values.length === 0) return null;
+  return values.reduce((a, b) => a + b, 0) / values.length;
+}
+
+function rank(companies) {
+  return [...companies].sort((a, b) => {
+    const ca = compositeScore(a.scores);
+    const cb = compositeScore(b.scores);
+    if (ca === null && cb === null) return 0;
+    if (ca === null) return 1;
+    if (cb === null) return -1;
+    return cb - ca;
+  });
+}
+
+function renderUpdated(lastUpdated) {
+  const el = document.getElementById("updated");
+  if (!lastUpdated) {
+    el.textContent = "No data yet — run the agi-tracker-updater subagent.";
+    el.classList.add("stale");
+    return;
+  }
+  const updated = new Date(lastUpdated);
+  const days = Math.floor((Date.now() - updated.getTime()) / 86400000);
+  const stale = days > 14;
+  el.textContent = `Last updated ${updated.toISOString().slice(0, 10)} (${days}d ago)`;
+  el.classList.toggle("stale", stale);
+}
+
+function escapeAttr(s) {
+  return String(s ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function benchHTML(bench, score) {
+  const has = typeof score === "number";
+  const valueClass = has ? "bench-value" : "bench-value missing";
+  const valueText = has ? score.toFixed(1) : "—";
+  const fillWidth = has ? Math.max(0, Math.min(100, score)) : 0;
+  const tip = escapeAttr(bench.description || "");
+  const dataScore = has ? `data-score="${score}"` : `data-score=""`;
+  return `
+    <div class="bench" data-tip="${tip}" ${dataScore}>
+      <div class="bench-label">
+        <span>${bench.label}</span>
+        <span class="${valueClass}">${valueText}</span>
+      </div>
+      <div class="bar"><div class="bar-fill" style="width: ${fillWidth}%"></div></div>
+    </div>
+  `;
+}
+
+function rowHTML(company, benchmarks, position) {
+  const composite = compositeScore(company.scores);
+  const compositeText =
+    composite === null
+      ? `<span class="composite empty">no data</span>`
+      : `<span class="composite">${composite.toFixed(1)}</span>`;
+  const modelText = company.model
+    ? `<span class="model">${company.model}</span>`
+    : `<span class="model">model TBD</span>`;
+  const benches = benchmarks.map((b) => benchHTML(b, company.scores[b.id])).join("");
+  const topClass = position === 1 && composite !== null ? "row top-1" : "row";
+
+  return `
+    <article class="${topClass}">
+      <div class="row-head">
+        <div class="rank-name">
+          <span class="rank">#${position}</span>
+          <span class="company">${company.name}</span>
+          ${modelText}
+        </div>
+        ${compositeText}
+      </div>
+      <div class="benchmarks">${benches}</div>
+    </article>
+  `;
+}
+
+function renderLeaderboard(data) {
+  const container = document.getElementById("leaderboard");
+  const ranked = rank(data.companies);
+  const anyData = ranked.some((c) => compositeScore(c.scores) !== null);
+
+  if (!anyData) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <p><strong>No benchmark data yet.</strong></p>
+        <p>Run the <code>agi-tracker-updater</code> subagent to populate scores.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = ranked
+    .map((c, i) => rowHTML(c, data.benchmarks, i + 1))
+    .join("");
+}
+
+async function refresh() {
+  const btn = document.getElementById("refresh");
+  if (btn) {
+    btn.disabled = true;
+    btn.classList.add("spinning");
+  }
+  try {
+    const data = await loadData();
+    renderUpdated(data.lastUpdated);
+    renderDoomMeter(data.doomMeter);
+    renderLeaderboard(data);
+  } catch (err) {
+    document.getElementById("leaderboard").innerHTML = `
+      <div class="empty-state">
+        <p>Failed to load <code>data.json</code>.</p>
+        <p>${err.message}</p>
+      </div>
+    `;
+  } finally {
+    if (btn) {
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.classList.remove("spinning");
+      }, 300);
+    }
+  }
+}
+
+function renderDoomMeter(meter) {
+  const el = document.getElementById("doom-meter");
+  if (!el) return;
+  if (!meter || !Array.isArray(meter.experts) || meter.experts.length === 0) {
+    el.innerHTML = "";
+    return;
+  }
+  const valid = meter.experts.filter((e) => typeof e.pDoom === "number");
+  const mean = valid.reduce((a, b) => a + b.pDoom, 0) / valid.length;
+  const pct = Math.max(0, Math.min(100, mean));
+
+  const listItems = valid
+    .slice()
+    .sort((a, b) => b.pDoom - a.pDoom)
+    .map(
+      (e) => `
+        <li>
+          <span class="tip-name">${escapeAttr(e.name)}</span>
+          <span class="tip-val">${e.pDoom}%</span>
+        </li>
+      `
+    )
+    .join("");
+
+  const tipHtml = `
+    <div class="tip-title">${escapeAttr(meter.label)} — mean of ${valid.length}</div>
+    <ul class="tip-list">${listItems}</ul>
+    <span class="tip-note">${escapeAttr(meter.methodology)}</span>
+  `;
+
+  el.dataset.tipHtml = tipHtml;
+  el.innerHTML = `
+    <div class="doom-ring">
+      <svg class="doom-svg" viewBox="0 0 36 36" aria-hidden="true">
+        <defs>
+          <linearGradient id="doom-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7c5cff" />
+            <stop offset="100%" stop-color="#22d3ee" />
+          </linearGradient>
+        </defs>
+        <circle class="doom-bg" cx="18" cy="18" r="15.9" pathLength="100" />
+        <circle class="doom-fill" cx="18" cy="18" r="15.9" pathLength="100"
+          stroke-dasharray="${pct.toFixed(1)} 100" />
+      </svg>
+      <span class="doom-value">${Math.round(pct)}%</span>
+    </div>
+    <div class="doom-label">${escapeAttr(meter.label)}</div>
+  `;
+}
+
+function setupTooltip() {
+  const tooltip = document.createElement("div");
+  tooltip.className = "cursor-tooltip";
+  tooltip.setAttribute("role", "tooltip");
+  tooltip.setAttribute("aria-hidden", "true");
+  document.body.appendChild(tooltip);
+
+  let active = null;
+
+  document.addEventListener("mouseover", (e) => {
+    const target = e.target.closest("[data-tip], [data-tip-html]");
+    if (!target || target === active) return;
+    active = target;
+    const html = target.dataset.tipHtml;
+    if (html) {
+      tooltip.innerHTML = html;
+      tooltip.classList.add("rich");
+    } else {
+      tooltip.textContent = target.dataset.tip || "";
+      tooltip.classList.remove("rich");
+    }
+    tooltip.classList.add("visible");
+    tooltip.setAttribute("aria-hidden", "false");
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!active) return;
+    const pad = 14;
+    const r = tooltip.getBoundingClientRect();
+    let x = e.clientX + pad;
+    let y = e.clientY + pad;
+    if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - pad;
+    if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - pad;
+    tooltip.style.transform = `translate(${x}px, ${y}px)`;
+  });
+
+  document.addEventListener("mouseout", (e) => {
+    if (!active) return;
+    if (e.relatedTarget && active.contains(e.relatedTarget)) return;
+    active = null;
+    tooltip.classList.remove("visible");
+    tooltip.setAttribute("aria-hidden", "true");
+  });
+}
+
+document.getElementById("refresh")?.addEventListener("click", refresh);
+setupTooltip();
+refresh();

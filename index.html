@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Race to AGI</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <div class="title-block">
+        <h1>Race to AGI</h1>
+        <p class="subtitle">Composite benchmark scores across the top 5 frontier AI labs.</p>
+        <div class="header-meta">
+          <p class="updated" id="updated">Loading…</p>
+          <button id="refresh" class="refresh-btn" type="button" aria-label="Reload data">
+            <span class="refresh-icon" aria-hidden="true">↻</span>
+            <span class="refresh-label">Refresh</span>
+          </button>
+        </div>
+      </div>
+      <div class="doom-meter" id="doom-meter" aria-label="Doom meter"></div>
+    </header>
+
+    <section id="leaderboard" aria-live="polite"></section>
+
+    <footer>
+      <details>
+        <summary>About this tracker</summary>
+        <p>
+          Composite score is the unweighted mean of four benchmarks: MMLU,
+          GPQA Diamond, SWE-bench Verified, and ARC-AGI. Numbers come from each
+          lab's published model cards and system cards.
+        </p>
+        <p class="caveat">
+          Caveat: benchmark conditions vary across labs (prompting, eval version,
+          tool access). Treat the ranking as directional, not definitive.
+        </p>
+        <p>
+          To refresh the closed-lab numbers, invoke the
+          <code>agi-tracker-updater</code> subagent in Claude Code.
+        </p>
+      </details>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
