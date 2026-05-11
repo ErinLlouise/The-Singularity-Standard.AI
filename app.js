@@ -118,6 +118,7 @@ async function refresh() {
     renderUpdated(data.lastUpdated);
     renderDoomMeter(data.doomMeter);
     renderLeaderboard(data);
+    renderArticles(data.articles);
   } catch (err) {
     document.getElementById("leaderboard").innerHTML = `
       <div class="empty-state">
@@ -185,6 +186,114 @@ function renderDoomMeter(meter) {
   `;
 }
 
+function renderArticles(articles) {
+  const track = document.getElementById("articles-track");
+  if (!track) return;
+  if (!Array.isArray(articles) || articles.length === 0) {
+    track.innerHTML = `<div class="empty-state" style="flex:1;">No articles yet — add some to <code>data.json</code>.</div>`;
+    return;
+  }
+  track.innerHTML = articles
+    .map(
+      (a) => `
+        <a class="article-card" href="${escapeAttr(a.url)}" target="_blank" rel="noopener noreferrer">
+          <div class="article-source">${escapeAttr(a.source)}</div>
+          <div class="article-title">${escapeAttr(a.title)}</div>
+          <div class="article-summary">${escapeAttr(a.summary)}</div>
+        </a>
+      `
+    )
+    .join("");
+}
+
+async function typewriter(el, full, msPerChar, abortCheck) {
+  for (let i = 0; i < full.length; i++) {
+    if (abortCheck && abortCheck()) return;
+    el.textContent = full.slice(0, i + 1);
+    const ch = full[i];
+    const delay = /[.!?]/.test(ch)
+      ? msPerChar * 7
+      : /[,;:]/.test(ch)
+      ? msPerChar * 3
+      : msPerChar;
+    await new Promise((r) => setTimeout(r, delay));
+  }
+}
+
+function setupParallax() {
+  const layer = document.querySelector(".parallax-bg");
+  if (!layer) return;
+  let scheduled = false;
+  const update = () => {
+    scheduled = false;
+    layer.style.transform = `translate3d(0, ${-window.scrollY * 0.5}px, 0)`;
+  };
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!scheduled) {
+        scheduled = true;
+        requestAnimationFrame(update);
+      }
+    },
+    { passive: true }
+  );
+  update();
+}
+
+function setupOverview() {
+  const cta = document.getElementById("just-tell-me");
+  const panel = document.getElementById("overview-panel");
+  const text = document.getElementById("overview-text");
+  const close = document.getElementById("overview-close");
+  if (!cta || !panel || !text || !close) return;
+
+  let runId = 0;
+
+  cta.addEventListener("click", async () => {
+    if (!panel.hasAttribute("hidden")) {
+      panel.setAttribute("hidden", "");
+      return;
+    }
+    const myRun = ++runId;
+    panel.removeAttribute("hidden");
+    text.classList.remove("typing");
+    text.classList.add("loading");
+    text.textContent = "Generating";
+    try {
+      const data = await loadData();
+      const overview =
+        data?.articlesOverview ||
+        "No overview available — add an `articlesOverview` field to data.json.";
+      await new Promise((r) => setTimeout(r, 450));
+      if (myRun !== runId || panel.hasAttribute("hidden")) return;
+      text.classList.remove("loading");
+      text.classList.add("typing");
+      text.textContent = "";
+      await typewriter(text, overview, 14, () => myRun !== runId || panel.hasAttribute("hidden"));
+      if (myRun === runId) text.classList.remove("typing");
+    } catch (err) {
+      text.classList.remove("loading", "typing");
+      text.textContent = `Failed to load overview: ${err.message}`;
+    }
+  });
+
+  close.addEventListener("click", () => {
+    runId++;
+    panel.setAttribute("hidden", "");
+  });
+}
+
+function setupCarousel() {
+  const track = document.getElementById("articles-track");
+  const prev = document.querySelector(".carousel-prev");
+  const next = document.querySelector(".carousel-next");
+  if (!track || !prev || !next) return;
+  const step = () => Math.max(280, Math.floor(track.clientWidth * 0.9));
+  prev.addEventListener("click", () => track.scrollBy({ left: -step(), behavior: "smooth" }));
+  next.addEventListener("click", () => track.scrollBy({ left: step(), behavior: "smooth" }));
+}
+
 function setupTooltip() {
   const tooltip = document.createElement("div");
   tooltip.className = "cursor-tooltip";
@@ -231,5 +340,8 @@ function setupTooltip() {
 }
 
 document.getElementById("refresh")?.addEventListener("click", refresh);
+setupParallax();
 setupTooltip();
+setupCarousel();
+setupOverview();
 refresh();

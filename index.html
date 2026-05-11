@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <div class="parallax-bg" aria-hidden="true"></div>
   <main>
     <header>
       <div class="title-block">
@@ -23,26 +24,48 @@
       <div class="doom-meter" id="doom-meter" aria-label="Doom meter"></div>
     </header>
 
+    <details class="about">
+      <summary>About this tracker</summary>
+      <p>
+        Composite score is the unweighted mean of four benchmarks: MMLU,
+        GPQA Diamond, SWE-bench Verified, and ARC-AGI. Numbers come from each
+        lab's published model cards and system cards.
+      </p>
+      <p class="caveat">
+        Caveat: benchmark conditions vary across labs (prompting, eval version,
+        tool access). Treat the ranking as directional, not definitive.
+      </p>
+      <p>
+        To refresh the closed-lab numbers, invoke the
+        <code>agi-tracker-updater</code> subagent in Claude Code.
+      </p>
+    </details>
+
     <section id="leaderboard" aria-live="polite"></section>
 
-    <footer>
-      <details>
-        <summary>About this tracker</summary>
-        <p>
-          Composite score is the unweighted mean of four benchmarks: MMLU,
-          GPQA Diamond, SWE-bench Verified, and ARC-AGI. Numbers come from each
-          lab's published model cards and system cards.
-        </p>
-        <p class="caveat">
-          Caveat: benchmark conditions vary across labs (prompting, eval version,
-          tool access). Treat the ranking as directional, not definitive.
-        </p>
-        <p>
-          To refresh the closed-lab numbers, invoke the
-          <code>agi-tracker-updater</code> subagent in Claude Code.
-        </p>
-      </details>
-    </footer>
+    <section class="articles-section">
+      <div class="section-head">
+        <h2 class="section-title">Latest in AI</h2>
+        <button
+          id="just-tell-me"
+          class="cta-just-tell-me"
+          type="button"
+          data-tip="Generates a 1–2 sentence overview synthesizing the articles below."
+        >
+          <span class="cta-spark" aria-hidden="true">✦</span>
+          Just tell me
+        </button>
+      </div>
+      <div class="overview-panel" id="overview-panel" hidden>
+        <div class="overview-text" id="overview-text"></div>
+        <button class="overview-close" id="overview-close" type="button" aria-label="Close overview">×</button>
+      </div>
+      <div class="carousel">
+        <button class="carousel-btn carousel-prev" type="button" aria-label="Previous articles">‹</button>
+        <div class="carousel-track" id="articles-track"></div>
+        <button class="carousel-btn carousel-next" type="button" aria-label="Next articles">›</button>
+      </div>
+    </section>
   </main>
 
   <script src="app.js"></script>
