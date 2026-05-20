@@ -429,9 +429,6 @@ h1 {
 
 .carousel {
   position: relative;
-  display: flex;
-  align-items: stretch;
-  gap: 8px;
 }
 
 .carousel-track {
@@ -441,8 +438,7 @@ h1 {
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   padding: 4px 4px 12px;
-  flex: 1;
-  min-width: 0;
+  width: 100%;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
 }
@@ -469,6 +465,7 @@ h1 {
   flex-direction: column;
   gap: 8px;
   transition: border-color 0.15s ease, transform 0.15s ease;
+  box-sizing: border-box;
 }
 
 .article-card:hover {
@@ -498,23 +495,33 @@ h1 {
 }
 
 .carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
   background: var(--panel);
   color: var(--text);
   border: 1px solid var(--border);
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   font-size: 1.3rem;
   line-height: 1;
-  cursor: pointer;
+  cursor: var(--cursor-purple), pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  align-self: center;
   font-family: inherit;
   padding: 0;
   transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.carousel-prev {
+  left: -56px;
+}
+
+.carousel-next {
+  right: -56px;
 }
 
 .carousel-btn:hover {
@@ -525,6 +532,11 @@ h1 {
 .carousel-btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
+}
+
+@media (max-width: 980px) {
+  .carousel-prev { left: 8px; }
+  .carousel-next { right: 8px; }
 }
 
 .cursor-tooltip {

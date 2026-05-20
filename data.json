@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-08",
+  "lastUpdated": "2026-05-11",
   "doomMeter": {
     "label": "How f*cked are we?",
     "methodology": "Mean of publicly stated p(doom) estimates from named AI researchers. Definitions of \"doom\" vary by speaker (extinction, catastrophic harm, loss of human control). Personal estimates, not formal forecasts — treat as directional.",
@@ -7,12 +7,12 @@
       { "name": "Eliezer Yudkowsky", "pDoom": 95, "context": "MIRI co-founder; public statements 2023–2024" },
       { "name": "Dan Hendrycks", "pDoom": 80, "context": "Director, Center for AI Safety" },
       { "name": "Yoshua Bengio", "pDoom": 20, "context": "Turing Award laureate; public essays" },
-      { "name": "Dario Amodei", "pDoom": 20, "context": "Anthropic CEO; public interviews" },
+      { "name": "Dario Amodei", "pDoom": 25, "context": "Anthropic CEO; Axios AI+DC Summit, Sept 2025" },
       { "name": "Geoffrey Hinton", "pDoom": 10, "context": "Turing Award laureate; post-Google interviews" },
       { "name": "Yann LeCun", "pDoom": 1, "context": "Meta Chief AI Scientist; public statements" }
     ]
   },
-  "articlesOverview": "The frontier labs are converging on near-identical reasoning benchmarks — Anthropic, OpenAI, and Google DeepMind now all sit in the 87–94% range on GPQA Diamond and SWE-bench Verified. xAI and Meta are differentiating on pricing and openness respectively, rather than raw capability.",
+  "articlesOverview": "The frontier labs are converging on near-identical reasoning benchmarks — OpenAI, Anthropic, and Google DeepMind now cluster tightly at 93.6–94.3% on GPQA Diamond, with SWE-bench Verified split between coding-tuned leaders (GPT-5.5 at 88.7%, Opus 4.7 at 87.6%) and Gemini 3.1 Pro at 80.6%. xAI and Meta are differentiating on pricing and openness respectively, rather than raw capability.",
   "articles": [
     {
       "title": "Introducing GPT-5.5",
@@ -49,43 +49,43 @@
     { "id": "mmlu", "label": "MMLU", "description": "Multitask knowledge across 57 subjects" },
     { "id": "gpqa", "label": "GPQA Diamond", "description": "Graduate-level science questions" },
     { "id": "swebench", "label": "SWE-bench Verified", "description": "Real-world software engineering tasks" },
-    { "id": "arcagi", "label": "ARC-AGI", "description": "Abstract reasoning, novel puzzles" }
+    { "id": "arcagi", "label": "ARC-AGI-1", "description": "Abstract reasoning, novel puzzles (original 2019 public eval; distinct from ARC-AGI-2/3)" }
   ],
   "companies": [
     {
       "name": "OpenAI",
       "model": "GPT-5.5",
-      "scores": { "mmlu": 92.4, "gpqa": null, "swebench": 88.7, "arcagi": null },
+      "scores": { "mmlu": 92.4, "gpqa": 93.6, "swebench": 88.7, "arcagi": null },
       "source": "https://openai.com/index/introducing-gpt-5-5/",
-      "lastVerified": "2026-05-08"
+      "lastVerified": "2026-05-11"
     },
     {
       "name": "Anthropic",
       "model": "Claude Opus 4.7",
       "scores": { "mmlu": null, "gpqa": 94.2, "swebench": 87.6, "arcagi": null },
       "source": "https://www.anthropic.com/news/claude-opus-4-7",
-      "lastVerified": "2026-05-08"
+      "lastVerified": "2026-05-11"
     },
     {
       "name": "Google DeepMind",
       "model": "Gemini 3.1 Pro",
       "scores": { "mmlu": null, "gpqa": 94.3, "swebench": 80.6, "arcagi": null },
       "source": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
-      "lastVerified": "2026-05-08"
+      "lastVerified": "2026-05-11"
     },
     {
       "name": "Meta",
       "model": "Llama 4 Maverick",
       "scores": { "mmlu": null, "gpqa": null, "swebench": null, "arcagi": null },
       "source": "https://www.llama.com/models/llama-4/",
-      "lastVerified": "2026-05-08"
+      "lastVerified": "2026-05-11"
     },
     {
       "name": "xAI",
       "model": "Grok 4.3",
       "scores": { "mmlu": null, "gpqa": null, "swebench": null, "arcagi": null },
       "source": "https://artificialanalysis.ai/articles/xai-launches-grok-4-3-with-improved-agentic-performance-and-lower-pricing",
-      "lastVerified": "2026-05-08"
+      "lastVerified": "2026-05-11"
     }
   ]
 }
