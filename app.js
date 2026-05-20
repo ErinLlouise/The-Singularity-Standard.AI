@@ -3,6 +3,16 @@ async function loadData() {
   return res.json();
 }
 
+let cachedData = null;
+
+function getView() {
+  return localStorage.getItem("trackerView") === "arena" ? "arena" : "benchmarks";
+}
+
+function setView(v) {
+  localStorage.setItem("trackerView", v);
+}
+
 function compositeScore(scores) {
   const values = Object.values(scores).filter((v) => typeof v === "number");
   if (values.length === 0) return null;
@@ -88,6 +98,16 @@ function rowHTML(company, benchmarks, position) {
 }
 
 function renderLeaderboard(data) {
+  const view = getView();
+  updateViewSwitcher(view);
+  if (view === "arena") {
+    renderLeaderboardArena(data);
+  } else {
+    renderLeaderboardBenchmarks(data);
+  }
+}
+
+function renderLeaderboardBenchmarks(data) {
   const container = document.getElementById("leaderboard");
   const ranked = rank(data.companies);
   const anyData = ranked.some((c) => compositeScore(c.scores) !== null);
@@ -107,6 +127,127 @@ function renderLeaderboard(data) {
     .join("");
 }
 
+function topArenaModel(company) {
+  const models = company.arenaModels;
+  if (!Array.isArray(models) || models.length === 0) return null;
+  return [...models].sort((a, b) => b.elo - a.elo)[0];
+}
+
+function rankArena(companies) {
+  return [...companies].sort((a, b) => {
+    const aTop = topArenaModel(a);
+    const bTop = topArenaModel(b);
+    if (!aTop && !bTop) return 0;
+    if (!aTop) return 1;
+    if (!bTop) return -1;
+    return bTop.elo - aTop.elo;
+  });
+}
+
+function arenaRowHTML(company, position) {
+  const models = Array.isArray(company.arenaModels) ? company.arenaModels : [];
+  const topModel = topArenaModel(company);
+
+  if (!topModel) {
+    return `
+      <article class="row arena">
+        <div class="row-head">
+          <div class="rank-name">
+            <span class="rank">#${position}</span>
+            <span class="company">${escapeAttr(company.name)}</span>
+          </div>
+          <span class="arena-no-data">no Arena entries</span>
+        </div>
+      </article>
+    `;
+  }
+
+  const topClass = position === 1 ? "row arena top-1" : "row arena";
+  const modelItems = models
+    .map(
+      (m) => `
+        <div class="arena-model-item">
+          <span class="arena-model-rank">#${m.rank}</span>
+          <span class="arena-model-name">${escapeAttr(m.name)}</span>
+          <span class="arena-model-elo">${m.elo}</span>
+          <span class="arena-model-margin">±${m.margin}</span>
+        </div>
+      `
+    )
+    .join("");
+
+  const expandBtn =
+    models.length > 1
+      ? `<button class="arena-expand-btn" type="button" data-toggle-list>+ Show all ${models.length} models</button>`
+      : "";
+
+  return `
+    <article class="${topClass}">
+      <div class="row-head">
+        <div class="rank-name">
+          <span class="rank">#${position}</span>
+          <span class="company">${escapeAttr(company.name)}</span>
+          <span class="arena-rank-badge">arena #${topModel.rank}</span>
+        </div>
+        <span class="arena-elo">${topModel.elo}<span class="arena-margin">±${topModel.margin}</span></span>
+      </div>
+      <div class="arena-headline">
+        <span class="arena-top-model">${escapeAttr(topModel.name)}</span>
+      </div>
+      ${expandBtn}
+      <div class="arena-model-list">${modelItems}</div>
+    </article>
+  `;
+}
+
+function renderLeaderboardArena(data) {
+  const container = document.getElementById("leaderboard");
+  const ranked = rankArena(data.companies);
+  const anyData = ranked.some((c) => topArenaModel(c) !== null);
+
+  if (!anyData) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <p><strong>No Arena data yet.</strong></p>
+        <p>Run the updater to populate <code>arenaModels</code> for each company.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = ranked.map((c, i) => arenaRowHTML(c, i + 1)).join("");
+}
+
+function updateViewSwitcher(view) {
+  document.querySelectorAll(".view-btn").forEach((btn) => {
+    btn.setAttribute(
+      "aria-selected",
+      btn.dataset.view === view ? "true" : "false"
+    );
+  });
+}
+
+function setupViewSwitcher() {
+  document.querySelectorAll(".view-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setView(btn.dataset.view);
+      if (cachedData) renderLeaderboard(cachedData);
+    });
+  });
+
+  document.getElementById("leaderboard").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-toggle-list]");
+    if (!btn) return;
+    const row = btn.closest(".row");
+    row.classList.toggle("expanded");
+    const expanded = row.classList.contains("expanded");
+    const count = row.querySelectorAll(".arena-model-item").length;
+    btn.textContent = expanded
+      ? `− Hide ${count} models`
+      : `+ Show all ${count} models`;
+  });
+}
+
 async function refresh() {
   const btn = document.getElementById("refresh");
   if (btn) {
@@ -115,6 +256,7 @@ async function refresh() {
   }
   try {
     const data = await loadData();
+    cachedData = data;
     renderUpdated(data.lastUpdated);
     renderDoomMeter(data.doomMeter);
     renderLeaderboard(data);
@@ -344,4 +486,5 @@ setupParallax();
 setupTooltip();
 setupCarousel();
 setupOverview();
+setupViewSwitcher();
 refresh();

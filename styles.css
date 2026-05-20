@@ -139,10 +139,157 @@ h1 {
   to { transform: rotate(360deg); }
 }
 
+.view-switcher {
+  display: inline-flex;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(var(--panel), var(--panel)) padding-box,
+    linear-gradient(90deg, var(--accent), var(--accent-2)) border-box;
+  padding: 3px;
+  margin-bottom: 16px;
+  gap: 2px;
+}
+
+.view-btn {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.view-btn[aria-selected="true"] {
+  background: linear-gradient(90deg, rgba(124, 92, 255, 0.25), rgba(34, 211, 238, 0.18));
+  color: var(--text);
+  font-weight: 500;
+}
+
+.view-btn:not([aria-selected="true"]):hover {
+  color: var(--text);
+}
+
 #leaderboard {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.arena-headline {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.arena-top-model {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+}
+
+.arena-rank-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--panel-2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 1px 8px;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.arena-elo {
+  font-size: 1.4rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-2);
+}
+
+.arena-margin {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  margin-left: 2px;
+}
+
+.arena-model-list {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row.expanded .arena-model-list {
+  display: flex;
+}
+
+.arena-model-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 10px;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.arena-model-rank {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+  min-width: 32px;
+}
+
+.arena-model-name {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  color: var(--text);
+  font-size: 0.82rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arena-model-elo {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-2);
+  font-weight: 500;
+}
+
+.arena-model-margin {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.arena-expand-btn {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-top: 1px solid var(--border);
+  padding: 8px 0 0;
+  margin-top: 10px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.arena-expand-btn:hover {
+  color: var(--text);
+}
+
+.arena-no-data {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-style: italic;
 }
 
 .row {
