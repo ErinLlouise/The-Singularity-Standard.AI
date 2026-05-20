@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-11",
+  "lastUpdated": "2026-05-21",
   "doomMeter": {
     "label": "How f*cked are we?",
     "methodology": "Mean of publicly stated p(doom) estimates from named AI researchers. Definitions of \"doom\" vary by speaker (extinction, catastrophic harm, loss of human control). Personal estimates, not formal forecasts — treat as directional.",
@@ -8,11 +8,11 @@
       { "name": "Dan Hendrycks", "pDoom": 80, "context": "Director, Center for AI Safety" },
       { "name": "Yoshua Bengio", "pDoom": 20, "context": "Turing Award laureate; public essays" },
       { "name": "Dario Amodei", "pDoom": 25, "context": "Anthropic CEO; Axios AI+DC Summit, Sept 2025" },
-      { "name": "Geoffrey Hinton", "pDoom": 10, "context": "Turing Award laureate; post-Google interviews" },
-      { "name": "Yann LeCun", "pDoom": 1, "context": "Meta Chief AI Scientist; public statements" }
+      { "name": "Geoffrey Hinton", "pDoom": 15, "context": "Turing Award laureate; The Diary of a CEO podcast, June 2025 — stated '10% to 20% chance' of AI wiping out humanity", "source": "https://www.cnbc.com/2025/06/17/ai-godfather-geoffrey-hinton-theres-a-chance-that-ai-could-displace-humans.html" },
+      { "name": "Yann LeCun", "pDoom": 1, "context": "AMI Labs executive chairman (departed Meta late 2025); calls existential risk estimates 'complete bullshit'; no numeric update found", "source": "https://www.axios.com/2026/05/04/ai-godfather-survival-guide-hype-doom" }
     ]
   },
-  "articlesOverview": "The frontier labs are converging on near-identical reasoning benchmarks — OpenAI, Anthropic, and Google DeepMind now cluster tightly at 93.6–94.3% on GPQA Diamond, with SWE-bench Verified split between coding-tuned leaders (GPT-5.5 at 88.7%, Opus 4.7 at 87.6%) and Gemini 3.1 Pro at 80.6%. xAI and Meta are differentiating on pricing and openness respectively, rather than raw capability.",
+  "articlesOverview": "The frontier reasoning tier now spans a 24-point range on GPQA Diamond — Gemini 3.1 Pro (94.3%), Opus 4.7 (94.2%), and GPT-5.5 (93.6%) cluster at the top, while Grok 4.3 posts 90.1% and Llama 4 Maverick trails at 69.8%. On coding, GPT-5.5 and Opus 4.7 remain co-leaders at 88.7% and 87.6% SWE-bench Verified; Google answered with Gemini 3.5 Flash (May 2026) targeting agentic tasks, with 3.5 Pro still months away.",
   "articles": [
     {
       "title": "Introducing GPT-5.5",
@@ -57,35 +57,35 @@
       "model": "GPT-5.5",
       "scores": { "mmlu": 92.4, "gpqa": 93.6, "swebench": 88.7, "arcagi": null },
       "source": "https://openai.com/index/introducing-gpt-5-5/",
-      "lastVerified": "2026-05-11"
+      "lastVerified": "2026-05-21"
     },
     {
       "name": "Anthropic",
       "model": "Claude Opus 4.7",
       "scores": { "mmlu": null, "gpqa": 94.2, "swebench": 87.6, "arcagi": null },
       "source": "https://www.anthropic.com/news/claude-opus-4-7",
-      "lastVerified": "2026-05-11"
+      "lastVerified": "2026-05-21"
     },
     {
       "name": "Google DeepMind",
       "model": "Gemini 3.1 Pro",
-      "scores": { "mmlu": null, "gpqa": 94.3, "swebench": 80.6, "arcagi": null },
-      "source": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
-      "lastVerified": "2026-05-11"
+      "scores": { "mmlu": 92.6, "gpqa": 94.3, "swebench": 80.6, "arcagi": null },
+      "source": "https://deepmind.google/models/gemini/pro/",
+      "lastVerified": "2026-05-21"
     },
     {
       "name": "Meta",
       "model": "Llama 4 Maverick",
-      "scores": { "mmlu": null, "gpqa": null, "swebench": null, "arcagi": null },
+      "scores": { "mmlu": null, "gpqa": 69.8, "swebench": null, "arcagi": null },
       "source": "https://www.llama.com/models/llama-4/",
-      "lastVerified": "2026-05-11"
+      "lastVerified": "2026-05-21"
     },
     {
       "name": "xAI",
       "model": "Grok 4.3",
-      "scores": { "mmlu": null, "gpqa": null, "swebench": null, "arcagi": null },
-      "source": "https://artificialanalysis.ai/articles/xai-launches-grok-4-3-with-improved-agentic-performance-and-lower-pricing",
-      "lastVerified": "2026-05-11"
+      "scores": { "mmlu": null, "gpqa": 90.1, "swebench": null, "arcagi": null },
+      "source": "https://designforonline.com/ai-models/xai-grok-4-3/",
+      "lastVerified": "2026-05-21"
     }
   ]
 }
