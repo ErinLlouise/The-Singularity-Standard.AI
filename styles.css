@@ -48,7 +48,29 @@ body {
 main {
   max-width: 880px;
   margin: 0 auto;
-  padding: 48px 24px 80px;
+  padding: 80px 24px 80px;
+}
+
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: transparent;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 header {
@@ -526,9 +548,25 @@ h1 {
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 14px 18px;
-  margin-bottom: 24px;
+  margin-top: 40px;
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.about a {
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-decoration-color: rgba(34, 211, 238, 0.4);
+  transition: text-decoration-color 0.15s ease;
+}
+
+.about a:hover {
+  text-decoration-color: var(--accent-2);
+}
+
+.about strong {
+  color: var(--text);
+  font-weight: 600;
 }
 
 .about summary {

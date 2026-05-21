@@ -8,6 +8,20 @@
 </head>
 <body>
   <div class="parallax-bg" aria-hidden="true"></div>
+
+  <div class="top-bar">
+    <div class="top-bar-right">
+      <button id="refresh" class="refresh-btn" type="button" aria-label="Reload data">
+        <span class="refresh-icon" aria-hidden="true">↻</span>
+        <span class="refresh-label">Refresh</span>
+      </button>
+      <button id="notifications" class="notif-btn" type="button" hidden>
+        <span class="notif-icon" aria-hidden="true">🔔</span>
+        <span class="notif-label">Notify me</span>
+      </button>
+    </div>
+  </div>
+
   <main>
     <header>
       <div class="title-block">
@@ -15,42 +29,49 @@
         <p class="subtitle">Composite benchmark scores across the top 5 frontier AI labs.</p>
         <div class="header-meta">
           <p class="updated" id="updated">Loading…</p>
-          <button id="refresh" class="refresh-btn" type="button" aria-label="Reload data">
-            <span class="refresh-icon" aria-hidden="true">↻</span>
-            <span class="refresh-label">Refresh</span>
-          </button>
-          <button id="notifications" class="notif-btn" type="button" hidden>
-            <span class="notif-icon" aria-hidden="true">🔔</span>
-            <span class="notif-label">Notify me</span>
-          </button>
         </div>
       </div>
       <div class="doom-meter" id="doom-meter" aria-label="Doom meter"></div>
     </header>
 
-    <details class="about">
-      <summary>About this tracker</summary>
-      <p>
-        Composite score is the unweighted mean of four benchmarks: MMLU,
-        GPQA Diamond, SWE-bench Verified, and ARC-AGI. Numbers come from each
-        lab's published model cards and system cards.
-      </p>
-      <p class="caveat">
-        Caveat: benchmark conditions vary across labs (prompting, eval version,
-        tool access). Treat the ranking as directional, not definitive.
-      </p>
-      <p>
-        To refresh the closed-lab numbers, invoke the
-        <code>agi-tracker-updater</code> subagent in Claude Code.
-      </p>
-    </details>
-
     <div class="view-switcher" role="tablist" aria-label="Tracker view">
-      <button type="button" class="view-btn" role="tab" data-view="benchmarks" aria-selected="true">Benchmarks</button>
-      <button type="button" class="view-btn" role="tab" data-view="arena" aria-selected="false">Arena Elo</button>
+      <button type="button" class="view-btn" role="tab" data-view="benchmarks" aria-selected="true"
+        data-tip="Composite of MMLU, GPQA Diamond, SWE-bench Verified, and ARC-AGI-1 per lab's flagship model. Sorted by mean of available scores; missing benchmarks ignored.">Benchmarks</button>
+      <button type="button" class="view-btn" role="tab" data-view="arena" aria-selected="false"
+        data-tip="Human-preference Elo from arena.ai pairwise voting (~6.3M votes). Each lab ranks by its top model's Elo across ~360 models on the leaderboard.">Arena Elo</button>
     </div>
 
     <section id="leaderboard" aria-live="polite"></section>
+
+    <details class="about">
+      <summary>About this tracker</summary>
+      <p>
+        <strong>Benchmarks view</strong> — composite is the unweighted mean of
+        four academic benchmarks: MMLU, GPQA Diamond, SWE-bench Verified, and
+        ARC-AGI-1. Numbers come from each lab's published model cards and
+        system cards. Missing scores are skipped when averaging rather than
+        treated as zero.
+      </p>
+      <p>
+        <strong>Arena Elo view</strong> — Elo ratings from
+        <a href="https://arena.ai/leaderboard/text" target="_blank" rel="noopener noreferrer">arena.ai/leaderboard/text</a>,
+        a human-preference leaderboard. Users compare two anonymous model
+        responses side-by-side and pick a winner; ratings are derived from
+        pairwise outcomes across millions of votes. Each lab ranks by its top
+        model's Elo across the ~360 models listed; the ± value is the margin
+        of error on each rating.
+      </p>
+      <p class="caveat">
+        Caveat: academic benchmarks measure reasoning correctness on fixed
+        tasks; Arena Elo measures human preference on open-ended chat. They
+        reward different things — a lab can lead on one and lag on the other.
+        Treat either ranking as directional, not definitive.
+      </p>
+      <p>
+        To refresh data, invoke the <code>agi-tracker-updater</code> subagent
+        in Claude Code, or wait for the daily 9am routine.
+      </p>
+    </details>
 
     <section class="articles-section">
       <div class="section-head">
