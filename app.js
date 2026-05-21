@@ -3,7 +3,7 @@ async function loadData() {
   return res.json();
 }
 
-const VAPID_PUBLIC_KEY = ""; // Generate with `npx web-push generate-vapid-keys` — see NOTIFICATIONS_SETUP.md
+const VAPID_PUBLIC_KEY = "BKHNjFNCA0jVJ81opEYBH4ovwIYb3I87QEGzpj2woI7CDsnNyorD9TDKdS8vgziXF2rSV46g3zNfxpO2GDsiSgk";
 
 let cachedData = null;
 
