@@ -139,6 +139,120 @@ h1 {
   to { transform: rotate(360deg); }
 }
 
+.notif-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.notif-btn:hover {
+  border-color: var(--accent);
+  background: var(--panel-2);
+}
+
+.notif-btn.subscribed {
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+.notif-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.subscription-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.subscription-modal-content {
+  background: var(--panel);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  background:
+    linear-gradient(var(--panel), var(--panel)) padding-box,
+    linear-gradient(90deg, var(--accent), var(--accent-2)) border-box;
+  padding: 24px;
+  max-width: 540px;
+  width: 100%;
+  color: var(--text);
+}
+
+.subscription-modal-content h3 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+}
+
+.subscription-modal-content p {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.subscription-modal-content code {
+  background: var(--panel-2);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--text);
+}
+
+.subscription-modal-content textarea {
+  width: 100%;
+  min-height: 180px;
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px;
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.78rem;
+  margin-bottom: 12px;
+  resize: vertical;
+}
+
+.subscription-modal-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.subscription-modal-actions button {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+}
+
+.subscription-modal-actions button.primary {
+  border-color: var(--accent);
+  background: linear-gradient(90deg, rgba(124, 92, 255, 0.25), rgba(34, 211, 238, 0.18));
+}
+
+.subscription-modal-actions button:hover {
+  border-color: var(--accent);
+}
+
 .view-switcher {
   display: inline-flex;
   border: 1px solid transparent;

@@ -3,6 +3,8 @@ async function loadData() {
   return res.json();
 }
 
+const VAPID_PUBLIC_KEY = ""; // Generate with `npx web-push generate-vapid-keys` — see NOTIFICATIONS_SETUP.md
+
 let cachedData = null;
 
 function getView() {
@@ -481,10 +483,97 @@ function setupTooltip() {
   });
 }
 
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+  const raw = atob(base64);
+  return new Uint8Array([...raw].map((c) => c.charCodeAt(0)));
+}
+
+function showSubscriptionModal(subJSON) {
+  const modal = document.createElement("div");
+  modal.className = "subscription-modal";
+  modal.innerHTML = `
+    <div class="subscription-modal-content">
+      <h3>One-time setup</h3>
+      <p>Copy this JSON and add it as a GitHub repo secret named <code>PUSH_SUBSCRIPTION</code> at github.com/&lt;you&gt;/&lt;repo&gt;/settings/secrets/actions.</p>
+      <textarea readonly>${subJSON}</textarea>
+      <div class="subscription-modal-actions">
+        <button type="button" data-action="copy">Copy</button>
+        <button type="button" data-action="close" class="primary">Done</button>
+      </div>
+    </div>
+  `;
+  modal.addEventListener("click", async (e) => {
+    if (e.target === modal || e.target.dataset.action === "close") {
+      modal.remove();
+      return;
+    }
+    if (e.target.dataset.action === "copy") {
+      await navigator.clipboard.writeText(subJSON);
+      e.target.textContent = "Copied";
+      setTimeout(() => (e.target.textContent = "Copy"), 1500);
+    }
+  });
+  document.body.appendChild(modal);
+}
+
+async function setupNotifications() {
+  const btn = document.getElementById("notifications");
+  if (!btn) return;
+  if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
+
+  btn.hidden = false;
+  let registration;
+  try {
+    registration = await navigator.serviceWorker.register("sw.js");
+  } catch (err) {
+    console.error("Service worker registration failed:", err);
+    btn.hidden = true;
+    return;
+  }
+
+  const sync = async () => {
+    const sub = await registration.pushManager.getSubscription();
+    btn.classList.toggle("subscribed", !!sub);
+    btn.querySelector(".notif-label").textContent = sub ? "Subscribed" : "Notify me";
+  };
+  await sync();
+
+  btn.addEventListener("click", async () => {
+    if (!VAPID_PUBLIC_KEY) {
+      alert(
+        "Notifications not configured yet. See NOTIFICATIONS_SETUP.md — you need to generate VAPID keys and set VAPID_PUBLIC_KEY in app.js."
+      );
+      return;
+    }
+    const current = await registration.pushManager.getSubscription();
+    if (current) {
+      await current.unsubscribe();
+      await sync();
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") return;
+    try {
+      const sub = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+      });
+      await sync();
+      showSubscriptionModal(JSON.stringify(sub.toJSON(), null, 2));
+    } catch (err) {
+      console.error("Subscription failed:", err);
+      alert("Subscription failed: " + err.message);
+    }
+  });
+}
+
 document.getElementById("refresh")?.addEventListener("click", refresh);
 setupParallax();
 setupTooltip();
 setupCarousel();
 setupOverview();
 setupViewSwitcher();
+setupNotifications();
 refresh();
