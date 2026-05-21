@@ -15,9 +15,10 @@
         <span class="refresh-icon" aria-hidden="true">↻</span>
         <span class="refresh-label">Refresh</span>
       </button>
-      <button id="notifications" class="notif-btn" type="button" hidden>
+      <button id="notifications" class="notif-btn" type="button" hidden aria-haspopup="dialog" aria-expanded="false">
         <span class="notif-icon" aria-hidden="true">🔔</span>
-        <span class="notif-label">Notify me</span>
+        <span class="notif-label">Notifications</span>
+        <span class="notif-count" id="notif-count" hidden>0</span>
       </button>
     </div>
   </div>
@@ -31,7 +32,6 @@
           <p class="updated" id="updated">Loading…</p>
         </div>
       </div>
-      <div class="doom-meter" id="doom-meter" aria-label="Doom meter"></div>
     </header>
 
     <div class="section-head">
@@ -46,7 +46,16 @@
 
     <section id="leaderboard" aria-live="polite"></section>
 
-    <details class="about">
+    <section class="doom-section">
+      <h2 class="section-title" id="doom-heading">How f*cked are we?</h2>
+      <div class="doom-panel">
+        <div class="doom-meter" id="doom-meter" aria-label="Doom meter"></div>
+        <div class="doom-chart" id="doom-chart" role="list" aria-label="Expert p(doom) estimates"></div>
+      </div>
+      <p class="doom-methodology" id="doom-methodology"></p>
+    </section>
+
+    <details class="about" hidden>
       <summary>About this tracker</summary>
       <p>
         <strong>Benchmarks view</strong> — composite is the unweighted mean of
@@ -100,6 +109,19 @@
       </div>
     </section>
   </main>
+
+  <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications" aria-hidden="true">
+    <div class="notif-panel-header">
+      <h2 class="notif-panel-title">Notifications</h2>
+      <div class="notif-panel-actions">
+        <button type="button" class="notif-mark-all" id="notif-mark-all" hidden>Mark all read</button>
+        <button type="button" class="notif-close" id="notif-close" aria-label="Close notifications">×</button>
+      </div>
+    </div>
+    <div class="notif-panel-sub" id="notif-panel-sub"></div>
+    <div class="notif-panel-list" id="notif-panel-list"></div>
+  </div>
+  <div class="notif-backdrop" id="notif-backdrop" hidden></div>
 
   <script src="app.js"></script>
 </body>

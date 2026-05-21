@@ -191,6 +191,225 @@ h1 {
   line-height: 1;
 }
 
+.notif-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: var(--bg);
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  margin-left: 4px;
+}
+
+.notif-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1500;
+}
+
+.notif-backdrop.open {
+  opacity: 1;
+}
+
+.notif-backdrop[hidden] {
+  display: none;
+}
+
+.notif-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 380px;
+  max-width: 90vw;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  transform: translateX(100%);
+  transition: transform 0.25s ease;
+  z-index: 1600;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -12px 0 32px rgba(0, 0, 0, 0.4);
+}
+
+.notif-panel.open {
+  transform: translateX(0);
+}
+
+.notif-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.notif-panel-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.notif-panel-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.notif-mark-all {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+}
+
+.notif-mark-all:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.notif-close {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: var(--cursor-purple), pointer;
+  font-family: inherit;
+}
+
+.notif-close:hover {
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+.notif-panel-sub {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.85rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.notif-panel-sub:empty {
+  display: none;
+}
+
+.notif-panel-sub .notif-sub-btn {
+  background: linear-gradient(90deg, rgba(124, 92, 255, 0.25), rgba(34, 211, 238, 0.18));
+  color: var(--text);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-top: 8px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+}
+
+.notif-panel-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+}
+
+.notif-empty {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.notif-item {
+  position: relative;
+  padding: 12px 14px 12px 22px;
+  border-radius: 10px;
+  margin-bottom: 6px;
+  background: transparent;
+  transition: background 0.15s ease;
+}
+
+.notif-item:hover {
+  background: var(--panel-2);
+}
+
+.notif-item.unread::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 18px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-2);
+}
+
+.notif-item-title {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 2px;
+}
+
+.notif-item-body {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+
+.notif-item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.notif-item-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.notif-item-mark {
+  background: transparent;
+  color: var(--accent-2);
+  border: none;
+  font-size: 0.72rem;
+  cursor: var(--cursor-purple), pointer;
+  font-family: inherit;
+  padding: 2px 4px;
+}
+
+.notif-item-mark:hover {
+  text-decoration: underline;
+}
+
+.notif-item.read .notif-item-mark {
+  display: none;
+}
+
 .subscription-modal {
   position: fixed;
   inset: 0;
@@ -626,11 +845,11 @@ h1 {
 }
 
 .section-title {
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   font-weight: 600;
   margin: 0;
   color: var(--text);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 .cta-just-tell-me {
@@ -910,19 +1129,95 @@ h1 {
   font-style: italic;
 }
 
-.doom-meter {
+.doom-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-top: 40px;
+}
+
+.doom-section .section-title {
+  margin-bottom: 16px;
+}
+
+.doom-panel {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 28px;
+}
+
+.doom-chart {
+  flex: 1;
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.expert-row {
+  display: grid;
+  grid-template-columns: minmax(110px, 150px) 1fr 38px;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.85rem;
+  cursor: var(--cursor-purple), help;
+}
+
+.expert-name {
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.expert-bar {
+  height: 6px;
+  background: var(--bar-bg);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.expert-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.expert-value {
+  color: var(--accent-2);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.doom-methodology {
+  margin: 16px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .doom-panel {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
+  }
+  .expert-row {
+    grid-template-columns: minmax(90px, 130px) 1fr 38px;
+  }
+}
+
+.doom-meter {
   cursor: var(--cursor-purple), help;
   flex-shrink: 0;
 }
 
 .doom-ring {
   position: relative;
-  width: 76px;
-  height: 76px;
+  width: 96px;
+  height: 96px;
 }
 
 .doom-svg {
@@ -951,16 +1246,8 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.05rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: var(--text);
   font-variant-numeric: tabular-nums;
-}
-
-.doom-label {
-  font-size: 0.72rem;
-  color: var(--muted);
-  text-align: center;
-  max-width: 100px;
-  line-height: 1.25;
 }

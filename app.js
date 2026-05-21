@@ -291,26 +291,7 @@ function renderDoomMeter(meter) {
   const mean = valid.reduce((a, b) => a + b.pDoom, 0) / valid.length;
   const pct = Math.max(0, Math.min(100, mean));
 
-  const listItems = valid
-    .slice()
-    .sort((a, b) => b.pDoom - a.pDoom)
-    .map(
-      (e) => `
-        <li>
-          <span class="tip-name">${escapeAttr(e.name)}</span>
-          <span class="tip-val">${e.pDoom}%</span>
-        </li>
-      `
-    )
-    .join("");
-
-  const tipHtml = `
-    <div class="tip-title">${escapeAttr(meter.label)} — mean of ${valid.length}</div>
-    <ul class="tip-list">${listItems}</ul>
-    <span class="tip-note">${escapeAttr(meter.methodology)}</span>
-  `;
-
-  el.dataset.tipHtml = tipHtml;
+  el.removeAttribute("data-tip-html");
   el.innerHTML = `
     <div class="doom-ring">
       <svg class="doom-svg" viewBox="0 0 36 36" aria-hidden="true">
@@ -326,8 +307,32 @@ function renderDoomMeter(meter) {
       </svg>
       <span class="doom-value">${Math.round(pct)}%</span>
     </div>
-    <div class="doom-label">${escapeAttr(meter.label)}</div>
   `;
+
+  const heading = document.getElementById("doom-heading");
+  if (heading && meter.label) heading.textContent = meter.label;
+
+  const chart = document.getElementById("doom-chart");
+  if (chart) {
+    const sorted = valid.slice().sort((a, b) => b.pDoom - a.pDoom);
+    chart.innerHTML = sorted
+      .map((e) => {
+        const tip = escapeAttr(e.context || "");
+        return `
+          <div class="expert-row" role="listitem" data-tip="${tip}">
+            <span class="expert-name">${escapeAttr(e.name)}</span>
+            <div class="expert-bar"><div class="expert-bar-fill" style="width: ${e.pDoom}%"></div></div>
+            <span class="expert-value">${e.pDoom}%</span>
+          </div>
+        `;
+      })
+      .join("");
+  }
+
+  const methodologyEl = document.getElementById("doom-methodology");
+  if (methodologyEl) {
+    methodologyEl.textContent = meter.methodology || "";
+  }
 }
 
 function renderArticles(articles) {
@@ -518,9 +523,89 @@ function showSubscriptionModal(subJSON) {
   document.body.appendChild(modal);
 }
 
+const NOTIF_DB = "agi-tracker-notifications";
+const NOTIF_STORE = "items";
+const NOTIF_CHANNEL = "agi-tracker-notifications";
+
+function openNotifDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(NOTIF_DB, 1);
+    req.onupgradeneeded = () => {
+      req.result.createObjectStore(NOTIF_STORE, { keyPath: "id", autoIncrement: true });
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function getAllNotifications() {
+  const db = await openNotifDB();
+  return new Promise((resolve, reject) => {
+    const req = db.transaction(NOTIF_STORE, "readonly").objectStore(NOTIF_STORE).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function markNotificationRead(id) {
+  const db = await openNotifDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(NOTIF_STORE, "readwrite");
+    const store = tx.objectStore(NOTIF_STORE);
+    const getReq = store.get(id);
+    getReq.onsuccess = () => {
+      const item = getReq.result;
+      if (item) {
+        item.read = true;
+        store.put(item);
+      }
+    };
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+async function markAllNotificationsRead() {
+  const db = await openNotifDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(NOTIF_STORE, "readwrite");
+    const cursorReq = tx.objectStore(NOTIF_STORE).openCursor();
+    cursorReq.onsuccess = () => {
+      const cursor = cursorReq.result;
+      if (!cursor) return;
+      if (!cursor.value.read) {
+        cursor.value.read = true;
+        cursor.update(cursor.value);
+      }
+      cursor.continue();
+    };
+    tx.oncomplete = resolve;
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function formatRelativeTime(timestamp) {
+  const diff = Date.now() - timestamp;
+  const m = Math.floor(diff / 60000);
+  const h = Math.floor(diff / 3600000);
+  const d = Math.floor(diff / 86400000);
+  if (m < 1) return "just now";
+  if (m < 60) return `${m}m ago`;
+  if (h < 24) return `${h}h ago`;
+  if (d < 7) return `${d}d ago`;
+  return new Date(timestamp).toLocaleDateString();
+}
+
 async function setupNotifications() {
   const btn = document.getElementById("notifications");
-  if (!btn) return;
+  const panel = document.getElementById("notif-panel");
+  const backdrop = document.getElementById("notif-backdrop");
+  const closeBtn = document.getElementById("notif-close");
+  const markAllBtn = document.getElementById("notif-mark-all");
+  const list = document.getElementById("notif-panel-list");
+  const subEl = document.getElementById("notif-panel-sub");
+  const countEl = document.getElementById("notif-count");
+  if (!btn || !panel) return;
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) return;
 
   btn.hidden = false;
@@ -533,40 +618,156 @@ async function setupNotifications() {
     return;
   }
 
-  const sync = async () => {
-    const sub = await registration.pushManager.getSubscription();
-    btn.classList.toggle("subscribed", !!sub);
-    btn.querySelector(".notif-label").textContent = sub ? "Subscribed" : "Notify me";
-  };
-  await sync();
-
-  btn.addEventListener("click", async () => {
-    if (!VAPID_PUBLIC_KEY) {
-      alert(
-        "Notifications not configured yet. See NOTIFICATIONS_SETUP.md — you need to generate VAPID keys and set VAPID_PUBLIC_KEY in app.js."
-      );
-      return;
-    }
-    const current = await registration.pushManager.getSubscription();
-    if (current) {
-      await current.unsubscribe();
-      await sync();
-      return;
-    }
-    const perm = await Notification.requestPermission();
-    if (perm !== "granted") return;
+  async function updateBadge() {
     try {
-      const sub = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
-      });
-      await sync();
-      showSubscriptionModal(JSON.stringify(sub.toJSON(), null, 2));
+      const items = await getAllNotifications();
+      const unread = items.filter((i) => !i.read).length;
+      if (unread > 0) {
+        countEl.hidden = false;
+        countEl.textContent = unread > 99 ? "99+" : String(unread);
+      } else {
+        countEl.hidden = true;
+      }
+      markAllBtn.hidden = unread === 0;
     } catch (err) {
-      console.error("Subscription failed:", err);
-      alert("Subscription failed: " + err.message);
+      console.error("Badge update failed:", err);
+    }
+  }
+
+  async function renderList() {
+    try {
+      const items = (await getAllNotifications()).sort(
+        (a, b) => b.timestamp - a.timestamp
+      );
+      if (items.length === 0) {
+        list.innerHTML = `<div class="notif-empty">No notifications yet.<br>The daily refresh will show up here.</div>`;
+        return;
+      }
+      list.innerHTML = items
+        .map(
+          (item) => `
+        <div class="notif-item ${item.read ? "read" : "unread"}" data-id="${item.id}">
+          <div class="notif-item-title">${escapeAttr(item.title || "Update")}</div>
+          <div class="notif-item-body">${escapeAttr(item.body || "")}</div>
+          <div class="notif-item-meta">
+            <span class="notif-item-time">${formatRelativeTime(item.timestamp)}</span>
+            <button type="button" class="notif-item-mark" data-mark-id="${item.id}">Mark read</button>
+          </div>
+        </div>
+      `
+        )
+        .join("");
+    } catch (err) {
+      list.innerHTML = `<div class="notif-empty">Failed to load notifications: ${escapeAttr(err.message)}</div>`;
+    }
+  }
+
+  async function renderSubscriptionState() {
+    if (!VAPID_PUBLIC_KEY) {
+      subEl.innerHTML = `Notifications aren't configured yet — see <code>NOTIFICATIONS_SETUP.md</code>.`;
+      return;
+    }
+    if (typeof Notification !== "undefined" && Notification.permission === "denied") {
+      subEl.innerHTML = `Notification permission blocked. Allow it in your browser settings to enable updates.`;
+      return;
+    }
+    const sub = await registration.pushManager.getSubscription();
+    if (sub) {
+      subEl.innerHTML = `Subscribed to daily updates. <button type="button" class="notif-sub-btn" data-action="unsubscribe">Unsubscribe</button>`;
+    } else {
+      subEl.innerHTML = `Get a Chrome notification each time the daily routine refreshes the data.<br><button type="button" class="notif-sub-btn" data-action="subscribe">Subscribe</button>`;
+    }
+  }
+
+  async function refreshPanel() {
+    await renderSubscriptionState();
+    await renderList();
+    await updateBadge();
+  }
+
+  function openPanel() {
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    btn.setAttribute("aria-expanded", "true");
+    backdrop.hidden = false;
+    requestAnimationFrame(() => backdrop.classList.add("open"));
+    refreshPanel();
+  }
+
+  function closePanel() {
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+    btn.setAttribute("aria-expanded", "false");
+    backdrop.classList.remove("open");
+    setTimeout(() => {
+      backdrop.hidden = true;
+    }, 220);
+  }
+
+  btn.addEventListener("click", () => {
+    if (panel.classList.contains("open")) closePanel();
+    else openPanel();
+  });
+  closeBtn.addEventListener("click", closePanel);
+  backdrop.addEventListener("click", closePanel);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && panel.classList.contains("open")) closePanel();
+  });
+
+  subEl.addEventListener("click", async (e) => {
+    const action = e.target.dataset.action;
+    if (action === "unsubscribe") {
+      const current = await registration.pushManager.getSubscription();
+      if (current) await current.unsubscribe();
+      await refreshPanel();
+      return;
+    }
+    if (action === "subscribe") {
+      const perm = await Notification.requestPermission();
+      if (perm !== "granted") {
+        await refreshPanel();
+        return;
+      }
+      try {
+        const sub = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
+        });
+        await refreshPanel();
+        showSubscriptionModal(JSON.stringify(sub.toJSON(), null, 2));
+      } catch (err) {
+        console.error("Subscription failed:", err);
+        alert("Subscription failed: " + err.message);
+      }
     }
   });
+
+  list.addEventListener("click", async (e) => {
+    const markBtn = e.target.closest("[data-mark-id]");
+    if (!markBtn) return;
+    const id = Number(markBtn.dataset.markId);
+    await markNotificationRead(id);
+    await refreshPanel();
+  });
+
+  markAllBtn.addEventListener("click", async () => {
+    await markAllNotificationsRead();
+    await refreshPanel();
+  });
+
+  try {
+    const channel = new BroadcastChannel(NOTIF_CHANNEL);
+    channel.addEventListener("message", (e) => {
+      if (e.data?.type === "new") {
+        updateBadge();
+        if (panel.classList.contains("open")) renderList();
+      }
+    });
+  } catch {
+    // BroadcastChannel unsupported; updates show on next page load
+  }
+
+  await updateBadge();
 }
 
 document.getElementById("refresh")?.addEventListener("click", refresh);
