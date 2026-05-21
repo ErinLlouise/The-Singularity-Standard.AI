@@ -263,6 +263,7 @@ async function refresh() {
     renderDoomMeter(data.doomMeter);
     renderLeaderboard(data);
     renderArticles(data.articles);
+    renderQuiz(data.toolQuiz);
   } catch (err) {
     document.getElementById("leaderboard").innerHTML = `
       <div class="empty-state">
@@ -431,6 +432,170 @@ function setupOverview() {
     runId++;
     panel.setAttribute("hidden", "");
   });
+}
+
+const quizState = {};
+let quizWired = false;
+
+function renderQuiz(quiz) {
+  const questionsEl = document.getElementById("quiz-questions");
+  const resultEl = document.getElementById("quiz-result");
+  const resetBtn = document.getElementById("quiz-reset");
+  const showAllBtn = document.getElementById("just-show-me");
+  const showAllPanel = document.getElementById("quiz-showall-panel");
+  const showAllCloseBtn = document.getElementById("quiz-showall-close");
+  const showAllGrid = document.getElementById("quiz-showall-grid");
+  if (!questionsEl || !resultEl) return;
+  if (!quiz || !Array.isArray(quiz.questions) || quiz.questions.length === 0) {
+    questionsEl.innerHTML = `<div class="empty-state">No quiz configured — add a <code>toolQuiz</code> block to <code>data.json</code>.</div>`;
+    return;
+  }
+
+  // Reset state on each render
+  for (const key of Object.keys(quizState)) delete quizState[key];
+
+  questionsEl.innerHTML = quiz.questions
+    .map(
+      (q) => `
+        <div class="quiz-q" data-qid="${escapeAttr(q.id)}">
+          <span class="quiz-q-label">${escapeAttr(q.label)}</span>
+          <div class="quiz-chips" role="radiogroup" aria-label="${escapeAttr(q.label)}">
+            ${(q.options || [])
+              .map(
+                (opt) => `
+                  <button type="button" class="quiz-chip" role="radio"
+                    aria-pressed="false" data-value="${escapeAttr(opt.value)}">${escapeAttr(opt.label)}</button>
+                `
+              )
+              .join("")}
+          </div>
+        </div>
+      `
+    )
+    .join("");
+
+  resultEl.hidden = true;
+  resultEl.innerHTML = "";
+  if (resetBtn) resetBtn.hidden = true;
+  if (showAllPanel) showAllPanel.hidden = true;
+  if (showAllGrid) showAllGrid.innerHTML = "";
+
+  if (quizWired) return;
+  quizWired = true;
+
+  questionsEl.addEventListener("click", (e) => {
+    const chip = e.target.closest(".quiz-chip");
+    if (!chip) return;
+    const qEl = chip.closest(".quiz-q");
+    const qid = qEl?.dataset.qid;
+    if (!qid) return;
+    qEl
+      .querySelectorAll(".quiz-chip")
+      .forEach((c) => c.setAttribute("aria-pressed", c === chip ? "true" : "false"));
+    quizState[qid] = chip.dataset.value;
+    if (resetBtn) resetBtn.hidden = false;
+    maybeShowResult(quiz);
+  });
+
+  resetBtn?.addEventListener("click", () => {
+    for (const key of Object.keys(quizState)) delete quizState[key];
+    questionsEl
+      .querySelectorAll(".quiz-chip")
+      .forEach((c) => c.setAttribute("aria-pressed", "false"));
+    resultEl.hidden = true;
+    resultEl.innerHTML = "";
+    resetBtn.hidden = true;
+  });
+
+  showAllBtn?.addEventListener("click", () => {
+    if (!showAllPanel) return;
+    if (!showAllPanel.hidden) {
+      showAllPanel.hidden = true;
+      return;
+    }
+    if (showAllGrid && !showAllGrid.innerHTML) {
+      renderShowAll(quiz, showAllGrid);
+    }
+    showAllPanel.hidden = false;
+  });
+
+  showAllCloseBtn?.addEventListener("click", () => {
+    if (showAllPanel) showAllPanel.hidden = true;
+  });
+}
+
+function renderShowAll(quiz, grid) {
+  const intentQ = quiz.questions.find((q) => q.id === "intent");
+  if (!intentQ) return;
+  const intentLabels = {};
+  const intentOrder = [];
+  for (const opt of intentQ.options || []) {
+    intentLabels[opt.value] = opt.label;
+    intentOrder.push(opt.value);
+  }
+  const byIntent = {};
+  for (const [key, pick] of Object.entries(quiz.matrix || {})) {
+    const [intent] = key.split("|");
+    if (!byIntent[intent]) byIntent[intent] = new Map();
+    if (!byIntent[intent].has(pick.name)) {
+      byIntent[intent].set(pick.name, pick);
+    }
+  }
+  grid.innerHTML = intentOrder
+    .map((intent) => {
+      const tools = byIntent[intent] ? Array.from(byIntent[intent].values()) : [];
+      const items = tools
+        .map(
+          (t) => `
+            <li class="usecase-tool">
+              <a class="usecase-tool-name" href="${escapeAttr(t.url)}" target="_blank" rel="noopener noreferrer">${escapeAttr(t.name)}</a>
+              <span class="usecase-tool-why">${escapeAttr(t.why || "")}</span>
+            </li>
+          `
+        )
+        .join("");
+      return `
+        <article class="usecase-card">
+          <div class="usecase-head">
+            <span class="usecase-name">${escapeAttr(intentLabels[intent] || intent)}</span>
+          </div>
+          <ul class="usecase-tools">${items}</ul>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function maybeShowResult(quiz) {
+  const resultEl = document.getElementById("quiz-result");
+  if (!resultEl) return;
+  const requiredIds = quiz.questions.map((q) => q.id);
+  const allAnswered = requiredIds.every((id) => quizState[id]);
+  if (!allAnswered) {
+    resultEl.hidden = true;
+    return;
+  }
+  const key = requiredIds.map((id) => quizState[id]).join("|");
+  const pick = quiz.matrix?.[key];
+  if (!pick) {
+    resultEl.hidden = false;
+    resultEl.innerHTML = `
+      <div class="quiz-result-card">
+        <span class="quiz-result-label">No pick for that combo</span>
+        <div class="quiz-result-why">Honest answer: I don't have a confident recommendation for this combination yet.</div>
+      </div>
+    `;
+    return;
+  }
+  resultEl.hidden = false;
+  resultEl.innerHTML = `
+    <div class="quiz-result-card">
+      <span class="quiz-result-label">My pick</span>
+      <div class="quiz-result-name">${escapeAttr(pick.name)}</div>
+      <div class="quiz-result-why">${escapeAttr(pick.why || "")}</div>
+      <a class="quiz-result-cta" href="${escapeAttr(pick.url)}" target="_blank" rel="noopener noreferrer">Try it →</a>
+    </div>
+  `;
 }
 
 function setupCarousel() {

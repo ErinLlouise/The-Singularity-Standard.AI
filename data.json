@@ -52,6 +52,63 @@
       "url": "https://artificialanalysis.ai/articles/xai-launches-grok-4-3-with-improved-agentic-performance-and-lower-pricing"
     }
   ],
+  "toolQuiz": {
+    "questions": [
+      {
+        "id": "intent",
+        "label": "What are you trying to do?",
+        "options": [
+          { "value": "code", "label": "Write code" },
+          { "value": "write", "label": "Write prose" },
+          { "value": "research", "label": "Research" },
+          { "value": "image", "label": "Make images" },
+          { "value": "audio", "label": "Voice / audio" },
+          { "value": "chat", "label": "Just chat" }
+        ]
+      },
+      {
+        "id": "priority",
+        "label": "What matters most?",
+        "options": [
+          { "value": "quality", "label": "Quality" },
+          { "value": "speed", "label": "Speed" },
+          { "value": "cost", "label": "Cost" },
+          { "value": "integration", "label": "Fits my workflow" }
+        ]
+      }
+    ],
+    "matrix": {
+      "code|quality":     { "name": "Claude",          "why": "Strong reasoning and nuance on code review, refactors, and architecture.", "url": "https://claude.ai/" },
+      "code|speed":       { "name": "ChatGPT",         "why": "Fast turnaround on broad code questions with a huge feature surface.",     "url": "https://chat.openai.com/" },
+      "code|cost":        { "name": "GitHub Copilot",  "why": "$10/mo flat for autocomplete inside the editor you already use.",          "url": "https://github.com/features/copilot" },
+      "code|integration": { "name": "Cursor",          "why": "AI-native VS Code fork so your shortcuts and extensions still work.",      "url": "https://www.cursor.com/" },
+
+      "write|quality":     { "name": "Claude",      "why": "Best at nuanced prose, careful editing, and matching a voice.",   "url": "https://claude.ai/" },
+      "write|speed":       { "name": "ChatGPT",     "why": "Fastest path from blank page to draft.",                          "url": "https://chat.openai.com/" },
+      "write|cost":        { "name": "ChatGPT free","why": "Free tier handles most general prose tasks.",                     "url": "https://chat.openai.com/" },
+      "write|integration": { "name": "Notion AI",   "why": "Inline writing inside the doc you're already in.",                "url": "https://www.notion.so/product/ai" },
+
+      "research|quality":     { "name": "Perplexity Pro", "why": "Citations-first with deeper reasoning models behind it.",          "url": "https://www.perplexity.ai/" },
+      "research|speed":       { "name": "Perplexity",     "why": "Cited answers in seconds; perfect for quick fact-checks.",         "url": "https://www.perplexity.ai/" },
+      "research|cost":        { "name": "Perplexity",     "why": "Generous free tier with sources included.",                       "url": "https://www.perplexity.ai/" },
+      "research|integration": { "name": "NotebookLM",     "why": "Grounds answers in documents you upload, keeps it offline-ish.",  "url": "https://notebooklm.google/" },
+
+      "image|quality":     { "name": "Midjourney",    "why": "Strongest aesthetic quality and style control on the market.",      "url": "https://www.midjourney.com/" },
+      "image|speed":       { "name": "DALL-E 3",      "why": "Generates inside ChatGPT in seconds with minimal prompting.",       "url": "https://openai.com/dall-e-3" },
+      "image|cost":        { "name": "DALL-E 3",      "why": "Included with ChatGPT Plus; no separate subscription.",             "url": "https://openai.com/dall-e-3" },
+      "image|integration": { "name": "Adobe Firefly", "why": "Lives inside Photoshop and the rest of Creative Cloud.",            "url": "https://www.adobe.com/products/firefly.html" },
+
+      "audio|quality":     { "name": "ElevenLabs", "why": "Top-tier voice cloning and TTS — hard to beat for natural speech.", "url": "https://elevenlabs.io/" },
+      "audio|speed":       { "name": "ElevenLabs", "why": "Real-time TTS API with low latency.",                                "url": "https://elevenlabs.io/" },
+      "audio|cost":        { "name": "Whisper",    "why": "OpenAI's open-source STT; free to self-host.",                       "url": "https://openai.com/research/whisper" },
+      "audio|integration": { "name": "ElevenLabs", "why": "Mature SDKs and integrations across most stacks.",                   "url": "https://elevenlabs.io/" },
+
+      "chat|quality":     { "name": "Claude",   "why": "Thoughtful, less sycophantic, handles long conversations well.",      "url": "https://claude.ai/" },
+      "chat|speed":       { "name": "ChatGPT",  "why": "Fastest UX with memory, voice mode, and the broadest tool surface.",  "url": "https://chat.openai.com/" },
+      "chat|cost":        { "name": "Claude free", "why": "Generous free tier; no credit card to start.",                     "url": "https://claude.ai/" },
+      "chat|integration": { "name": "Gemini",   "why": "Tight integration with Google Workspace (Gmail, Docs, Drive).",       "url": "https://gemini.google.com/" }
+    }
+  },
   "benchmarks": [
     { "id": "mmlu", "label": "MMLU", "description": "Multitask knowledge across 57 subjects" },
     { "id": "gpqa", "label": "GPQA Diamond", "description": "Graduate-level science questions" },
