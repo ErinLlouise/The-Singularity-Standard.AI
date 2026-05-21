@@ -58,6 +58,7 @@ self.addEventListener("push", (event) => {
         icon: data.icon,
         badge: data.badge,
         tag: "agi-tracker-update",
+        renotify: true,
         data: { url: data.url || "/" },
       });
     })()
