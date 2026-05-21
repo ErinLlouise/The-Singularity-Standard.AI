@@ -283,8 +283,11 @@ h1 {
     linear-gradient(var(--panel), var(--panel)) padding-box,
     linear-gradient(90deg, var(--accent), var(--accent-2)) border-box;
   padding: 3px;
-  margin-bottom: 16px;
   gap: 2px;
+}
+
+.section-head .view-switcher {
+  margin: 0;
 }
 
 .view-btn {
@@ -574,6 +577,7 @@ h1 {
   color: var(--text);
   font-weight: 500;
   list-style: none;
+  position: relative;
 }
 
 .about summary::-webkit-details-marker {
@@ -581,14 +585,15 @@ h1 {
 }
 
 .about summary::before {
-  content: "▸ ";
+  content: "▸";
+  position: absolute;
+  left: -9px;
+  top: 0;
   color: var(--muted);
-  display: inline-block;
-  transition: transform 0.15s ease;
 }
 
 .about[open] summary::before {
-  content: "▾ ";
+  content: "▾";
 }
 
 .about p {

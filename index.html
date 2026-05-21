@@ -25,8 +25,8 @@
   <main>
     <header>
       <div class="title-block">
-        <h1>Race to AGI</h1>
-        <p class="subtitle">Composite benchmark scores across the top 5 frontier AI labs.</p>
+        <h1>The Singularity Standard</h1>
+        <p class="subtitle">Daily AI updates — benchmarks, human preference, and how doomed we are.</p>
         <div class="header-meta">
           <p class="updated" id="updated">Loading…</p>
         </div>
@@ -34,11 +34,14 @@
       <div class="doom-meter" id="doom-meter" aria-label="Doom meter"></div>
     </header>
 
-    <div class="view-switcher" role="tablist" aria-label="Tracker view">
-      <button type="button" class="view-btn" role="tab" data-view="benchmarks" aria-selected="true"
-        data-tip="Composite of MMLU, GPQA Diamond, SWE-bench Verified, and ARC-AGI-1 per lab's flagship model. Sorted by mean of available scores; missing benchmarks ignored.">Benchmarks</button>
-      <button type="button" class="view-btn" role="tab" data-view="arena" aria-selected="false"
-        data-tip="Human-preference Elo from arena.ai pairwise voting (~6.3M votes). Each lab ranks by its top model's Elo across ~360 models on the leaderboard.">Arena Elo</button>
+    <div class="section-head">
+      <h2 class="section-title">Today's contenders for godhood</h2>
+      <div class="view-switcher" role="tablist" aria-label="Tracker view">
+        <button type="button" class="view-btn" role="tab" data-view="benchmarks" aria-selected="true"
+          data-tip="Composite of MMLU, GPQA Diamond, SWE-bench Verified, and ARC-AGI-1 per lab's flagship model. Sorted by mean of available scores; missing benchmarks ignored.">Benchmarks</button>
+        <button type="button" class="view-btn" role="tab" data-view="arena" aria-selected="false"
+          data-tip="Human-preference Elo from arena.ai pairwise voting (~6.3M votes). Each lab ranks by its top model's Elo across ~360 models on the leaderboard.">Arena Elo</button>
+      </div>
     </div>
 
     <section id="leaderboard" aria-live="polite"></section>
