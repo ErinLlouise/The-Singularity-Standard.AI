@@ -1,0 +1,68 @@
+name: Push notification on data refresh
+
+on:
+  push:
+    branches: [main, v2]
+    paths:
+      - data.json
+  workflow_dispatch:
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check secrets are configured
+        env:
+          PUB: ${{ secrets.VAPID_PUBLIC_KEY }}
+          PRIV: ${{ secrets.VAPID_PRIVATE_KEY }}
+          SUB: ${{ secrets.PUSH_SUBSCRIPTION }}
+        run: |
+          if [ -z "$PUB" ] || [ -z "$PRIV" ] || [ -z "$SUB" ]; then
+            echo "::warning::One or more of VAPID_PUBLIC_KEY, VAPID_PRIVATE_KEY, PUSH_SUBSCRIPTION is unset — skipping push. See NOTIFICATIONS_SETUP.md."
+            exit 0
+          fi
+          echo "All secrets present."
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install web-push
+        run: npm install --silent --no-save web-push@3
+
+      - name: Send push notification
+        env:
+          VAPID_PUBLIC: ${{ secrets.VAPID_PUBLIC_KEY }}
+          VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE_KEY }}
+          PUSH_SUB: ${{ secrets.PUSH_SUBSCRIPTION }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          node <<'EOF'
+          const webPush = require("web-push");
+          if (!process.env.VAPID_PUBLIC || !process.env.VAPID_PRIVATE || !process.env.PUSH_SUB) {
+            console.log("Secrets missing — skipping.");
+            process.exit(0);
+          }
+          webPush.setVapidDetails(
+            "mailto:agi-tracker@noreply.local",
+            process.env.VAPID_PUBLIC,
+            process.env.VAPID_PRIVATE
+          );
+          const subscription = JSON.parse(process.env.PUSH_SUB);
+          const firstLine = (process.env.COMMIT_MSG || "").split("\n")[0];
+          const payload = JSON.stringify({
+            title: "AGI Tracker refreshed",
+            body: firstLine || ("data.json updated on " + process.env.BRANCH),
+            url: "/",
+          });
+          webPush.sendNotification(subscription, payload)
+            .then(() => console.log("Push delivered."))
+            .catch(err => {
+              console.error("Push failed:", err.statusCode, err.body || err.message);
+              if (err.statusCode === 410 || err.statusCode === 404) {
+                console.error("::warning::Subscription is gone. Re-subscribe in the browser and update the PUSH_SUBSCRIPTION secret.");
+              }
+              process.exit(1);
+            });
+          EOF
