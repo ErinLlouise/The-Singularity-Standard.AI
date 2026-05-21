@@ -57,6 +57,95 @@ main {
   padding: 80px 24px 80px;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+#tracker-section,
+#doom-heading,
+#articles-section,
+#quiz-section {
+  scroll-margin-top: 76px;
+}
+
+.page-nav {
+  position: fixed;
+  left: 28px;
+  top: 33%;
+  transform: translateY(-50%);
+  z-index: 50;
+  pointer-events: none;
+  height: 380px;
+}
+
+.page-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: auto;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.page-nav-item {
+  position: relative;
+  display: block;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  opacity: 0.35;
+  transform: scale(0.9);
+  transform-origin: left center;
+}
+
+.page-nav-item a {
+  display: block;
+  padding: 10px 16px 10px 28px;
+  font-size: 1.1rem;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+  cursor: var(--cursor-purple), pointer;
+}
+
+.page-nav-item:hover {
+  opacity: 0.85;
+}
+
+.page-nav-item:hover a {
+  color: var(--text);
+}
+
+.page-nav-item.active {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.page-nav-item.active a {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.page-nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-radius: 50%;
+}
+
+@media (max-width: 1100px) {
+  .page-nav {
+    display: none;
+  }
+}
+
 .top-bar {
   position: fixed;
   top: 0;
@@ -1381,6 +1470,126 @@ h1 {
   font-size: 0.78rem;
   color: var(--muted);
   line-height: 1.4;
+}
+
+.site-footer {
+  min-height: 50vh;
+  padding: 80px 24px 64px;
+  margin-top: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: linear-gradient(180deg, transparent, rgba(11, 13, 18, 0.65));
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(720px, 80%);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+}
+
+.site-footer-inner {
+  max-width: 680px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  align-items: center;
+}
+
+.site-footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.site-footer-logo {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.site-footer-logo svg {
+  width: 140px;
+  height: 88px;
+  display: block;
+}
+
+.site-footer-company {
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.15;
+  background-image:
+    var(--grain-svg),
+    linear-gradient(95deg, #7c5cff 0%, #22d3ee 100%);
+  background-size: 200px 200px, 100% 100%;
+  background-repeat: repeat, no-repeat;
+  background-blend-mode: normal;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.site-footer-tagline {
+  font-size: 0.95rem;
+  color: var(--muted);
+  font-style: italic;
+  margin: 0;
+}
+
+.site-footer-divider {
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  border: none;
+  margin: 0;
+}
+
+.site-footer-disclaimers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.5;
+  max-width: 580px;
+}
+
+.site-footer-disclaimers li::before {
+  content: "·\00a0";
+  color: var(--accent-2);
+  font-weight: 700;
+}
+
+.site-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.site-footer-copy {
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.site-footer-meta {
+  margin: 0;
+  font-style: italic;
 }
 
 @media (max-width: 980px) {

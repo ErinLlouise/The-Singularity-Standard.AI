@@ -370,6 +370,53 @@ async function typewriter(el, full, msPerChar, abortCheck) {
   }
 }
 
+function setupPageNav() {
+  const navList = document.getElementById("page-nav-list");
+  if (!navList) return;
+  const items = Array.from(navList.querySelectorAll(".page-nav-item"));
+  const sections = items
+    .map((item) => ({ item, target: document.getElementById(item.dataset.section) }))
+    .filter((s) => s.target);
+  if (sections.length === 0) return;
+
+  function update() {
+    const focusLine = window.innerHeight * 0.33;
+    let activeIdx = 0;
+    let bestScore = -Infinity;
+    sections.forEach((s, i) => {
+      const top = s.target.getBoundingClientRect().top;
+      // Section is "active" if its top has been scrolled past the focus line.
+      // Among those, the LATEST (top closest to focusLine from above) wins.
+      const score = top <= focusLine ? top : -Infinity;
+      if (score > bestScore) {
+        bestScore = score;
+        activeIdx = i;
+      }
+    });
+
+    items.forEach((item, i) => item.classList.toggle("active", i === activeIdx));
+
+    const activeItem = items[activeIdx];
+    const containerHeight = navList.parentElement.offsetHeight;
+    const itemCenter = activeItem.offsetTop + activeItem.offsetHeight / 2;
+    const shift = containerHeight / 2 - itemCenter;
+    navList.style.transform = `translateY(${shift}px)`;
+  }
+
+  let scheduled = false;
+  function schedule() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      update();
+    });
+  }
+  window.addEventListener("scroll", schedule, { passive: true });
+  window.addEventListener("resize", schedule, { passive: true });
+  update();
+}
+
 function setupParallax() {
   const layer = document.querySelector(".parallax-bg");
   if (!layer) return;
@@ -936,6 +983,7 @@ async function setupNotifications() {
 }
 
 document.getElementById("refresh")?.addEventListener("click", refresh);
+setupPageNav();
 setupParallax();
 setupTooltip();
 setupCarousel();
