@@ -673,9 +673,9 @@ async function setupNotifications() {
     }
     const sub = await registration.pushManager.getSubscription();
     if (sub) {
-      subEl.innerHTML = `Subscribed to daily updates. <button type="button" class="notif-sub-btn" data-action="unsubscribe">Unsubscribe</button>`;
+      subEl.innerHTML = `<button type="button" class="notif-sub-btn" data-action="unsubscribe">Unsubscribe</button><span>Subscribed to daily updates.</span>`;
     } else {
-      subEl.innerHTML = `Get a Chrome notification each time the daily routine refreshes the data.<br><button type="button" class="notif-sub-btn" data-action="subscribe">Subscribe</button>`;
+      subEl.innerHTML = `<button type="button" class="notif-sub-btn" data-action="subscribe">Subscribe</button><span>Get a Chrome notification each time the daily routine refreshes the data.</span>`;
     }
   }
 

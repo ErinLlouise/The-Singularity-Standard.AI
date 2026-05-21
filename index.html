@@ -3,21 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Race to AGI</title>
+  <title>The Singularity Standard</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="parallax-bg" aria-hidden="true"></div>
 
   <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="tss-logo" aria-label="The Singularity Standard">TSS</span>
+    </div>
     <div class="top-bar-right">
       <button id="refresh" class="refresh-btn" type="button" aria-label="Reload data">
         <span class="refresh-icon" aria-hidden="true">↻</span>
         <span class="refresh-label">Refresh</span>
       </button>
       <button id="notifications" class="notif-btn" type="button" hidden aria-haspopup="dialog" aria-expanded="false">
-        <span class="notif-icon" aria-hidden="true">🔔</span>
-        <span class="notif-label">Notifications</span>
+        <span class="notif-label">Past Updates</span>
         <span class="notif-count" id="notif-count" hidden>0</span>
       </button>
     </div>
@@ -46,8 +48,8 @@
 
     <section id="leaderboard" aria-live="polite"></section>
 
+    <h2 class="section-title doom-heading" id="doom-heading">How f*cked are we?</h2>
     <section class="doom-section">
-      <h2 class="section-title" id="doom-heading">How f*cked are we?</h2>
       <div class="doom-panel">
         <div class="doom-meter" id="doom-meter" aria-label="Doom meter"></div>
         <div class="doom-chart" id="doom-chart" role="list" aria-label="Expert p(doom) estimates"></div>
@@ -110,16 +112,16 @@
     </section>
   </main>
 
-  <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Notifications" aria-hidden="true">
+  <div class="notif-panel" id="notif-panel" role="dialog" aria-label="Past Updates" aria-hidden="true">
     <div class="notif-panel-header">
-      <h2 class="notif-panel-title">Notifications</h2>
+      <h2 class="notif-panel-title">Past Updates</h2>
       <div class="notif-panel-actions">
         <button type="button" class="notif-mark-all" id="notif-mark-all" hidden>Mark all read</button>
-        <button type="button" class="notif-close" id="notif-close" aria-label="Close notifications">×</button>
+        <button type="button" class="notif-close" id="notif-close" aria-label="Close panel">×</button>
       </div>
     </div>
-    <div class="notif-panel-sub" id="notif-panel-sub"></div>
     <div class="notif-panel-list" id="notif-panel-list"></div>
+    <div class="notif-panel-sub" id="notif-panel-sub"></div>
   </div>
   <div class="notif-backdrop" id="notif-backdrop" hidden></div>
 
