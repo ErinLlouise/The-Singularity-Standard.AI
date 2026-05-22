@@ -186,17 +186,64 @@ html {
   display: block;
 }
 
-header {
+.hero {
+  position: relative;
+  min-height: 70vh;
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
+  align-items: center;
+  padding: 40px 0 60px;
   margin-bottom: 32px;
+  overflow: visible;
 }
 
-.title-block {
-  flex: 1;
-  min-width: 0;
+.hero h1 {
+  font-size: 3.4rem;
+  line-height: 1.05;
+}
+
+.hero-cloud-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 820px;
+  height: auto;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-subtitle {
+  font-size: 1.35rem;
+  color: var(--text);
+  margin: 12px 0 28px;
+  line-height: 1.4;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.hero-body {
+  font-size: 1.02rem;
+  color: var(--muted);
+  line-height: 1.65;
+  max-width: 600px;
+  margin: 0 0 18px;
+}
+
+.hero-body-coda {
+  color: var(--text);
+  opacity: 0.65;
+  font-style: italic;
+  font-size: 0.92rem;
+  margin-bottom: 28px;
 }
 
 h1 {

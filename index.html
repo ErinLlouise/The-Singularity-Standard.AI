@@ -50,15 +50,40 @@
   </div>
 
   <main>
-    <header>
-      <div class="title-block">
+    <section class="hero">
+      <svg class="hero-cloud-bg" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="heroOutlineGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7c5cff" stop-opacity="0.4" />
+            <stop offset="100%" stop-color="#22d3ee" stop-opacity="0.32" />
+          </linearGradient>
+          <filter id="heroCloudGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3.2" />
+          </filter>
+        </defs>
+        <g fill="url(#heroOutlineGrad)" filter="url(#heroCloudGlow)">
+          <ellipse cx="22" cy="30" rx="14" ry="12" />
+          <ellipse cx="40" cy="22" rx="18" ry="16" />
+          <ellipse cx="58" cy="30" rx="14" ry="12" />
+        </g>
+      </svg>
+
+      <div class="hero-content">
         <h1>The Singularity Standard</h1>
-        <p class="subtitle">Daily AI updates — benchmarks, human preference, and how doomed we are.</p>
-        <div class="header-meta">
-          <p class="updated" id="updated">Loading…</p>
-        </div>
+        <p class="hero-subtitle">All the AI numbers that matter — on one page, refreshed every morning.</p>
+        <p class="hero-body">
+          Benchmarks, human-preference Elo, named-researcher p(doom), and tool picks for whatever
+          you're trying to do. An autonomous agent does the legwork every morning so you can pretend
+          nothing is happening — or quietly track how doomed we are between meetings. Either way:
+          no more eight tabs of Hacker News, no Substack subscriptions, no men on X telling you what's
+          coming. Just the numbers, daily.
+        </p>
+        <p class="hero-body hero-body-coda">
+          For developers, managers, and anyone else quietly preparing to be obsolete.
+        </p>
+        <p class="updated" id="updated">Loading…</p>
       </div>
-    </header>
+    </section>
 
     <div class="section-head" id="tracker-section">
       <h2 class="section-title">Today's contenders for godhood</h2>
@@ -214,16 +239,16 @@
   <aside class="page-nav" aria-label="Page contents">
     <ul class="page-nav-list" id="page-nav-list">
       <li class="page-nav-item" data-section="tracker-section">
-        <a href="#tracker-section">Tracker</a>
+        <a href="#tracker-section">The contenders</a>
       </li>
       <li class="page-nav-item" data-section="doom-heading">
-        <a href="#doom-heading">Doom meter</a>
+        <a href="#doom-heading">How f*cked</a>
       </li>
       <li class="page-nav-item" data-section="articles-section">
-        <a href="#articles-section">Latest in AI</a>
+        <a href="#articles-section">Recent dread</a>
       </li>
       <li class="page-nav-item" data-section="quiz-section">
-        <a href="#quiz-section">What now?</a>
+        <a href="#quiz-section">Pick your weapon</a>
       </li>
     </ul>
   </aside>
