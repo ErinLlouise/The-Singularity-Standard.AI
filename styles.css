@@ -63,6 +63,7 @@ html {
 
 #tracker-section,
 #doom-heading,
+#personal-doom-heading,
 #articles-section,
 #quiz-section {
   scroll-margin-top: 76px;
@@ -197,11 +198,24 @@ html {
 }
 
 .hero h1 {
-  font-size: 3.4rem;
-  line-height: 1.05;
+  font-family: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: clamp(4rem, 9vw, 6rem);
+  line-height: 0.9;
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.hero h1 .deadly,
+.hero h1 .serious {
+  display: block;
+}
+
+.hero h1 .serious {
+  font-size: 1.33em;
 }
 
 .hero-cloud-bg {
+  display: none;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -1778,6 +1792,31 @@ h1 {
   color: var(--muted);
   font-style: italic;
   line-height: 1.5;
+}
+
+.personal-doom-question {
+  margin-bottom: 18px;
+}
+
+.personal-doom-question .quiz-q-label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.personal-doom-result[hidden] {
+  display: none;
+}
+
+.personal-doom-result {
+  animation: quizResultIn 0.28s ease;
+}
+
+.personal-doom-prediction {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.6;
+  flex: 1;
 }
 
 @media (max-width: 600px) {

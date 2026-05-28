@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-21",
+  "lastUpdated": "2026-05-22",
   "arenaMetric": {
     "name": "Arena Elo",
     "source": "https://arena.ai/leaderboard/text",
@@ -18,6 +18,41 @@
       { "name": "Geoffrey Hinton", "pDoom": 15, "context": "Turing Award laureate; The Diary of a CEO podcast, June 2025 — stated '10% to 20% chance' of AI wiping out humanity", "source": "https://www.cnbc.com/2025/06/17/ai-godfather-geoffrey-hinton-theres-a-chance-that-ai-could-displace-humans.html" },
       { "name": "Yann LeCun", "pDoom": 1, "context": "AMI Labs executive chairman (departed Meta late 2025); calls existential risk estimates 'complete bullshit'; no numeric update found", "source": "https://www.axios.com/2026/05/04/ai-godfather-survival-guide-hype-doom" }
     ]
+  },
+  "personalDoom": {
+    "label": "How f*cked are you?",
+    "methodology": "Opinionated estimates of role-specific exposure to AI displacement over the next 2-3 years. Pessimistic and subjective; not career advice. Numbers are vibes, not forecasts.",
+    "question": {
+      "label": "What do you do for a living?",
+      "options": [
+        { "value": "software",   "label": "Software dev" },
+        { "value": "designer",   "label": "Designer" },
+        { "value": "writer",     "label": "Writer / journalist" },
+        { "value": "manager",    "label": "Manager" },
+        { "value": "teacher",    "label": "Teacher" },
+        { "value": "lawyer",     "label": "Lawyer" },
+        { "value": "doctor",     "label": "Doctor / clinician" },
+        { "value": "finance",    "label": "Finance / accounting" },
+        { "value": "sales",      "label": "Sales / marketing" },
+        { "value": "trades",     "label": "Trades / manual" },
+        { "value": "researcher", "label": "Researcher / academic" },
+        { "value": "other",      "label": "Something else" }
+      ]
+    },
+    "matrix": {
+      "software":   { "pDoom": 35, "prediction": "Coding agents will eat 30-50% of routine implementation work in the next 2-3 years. Senior architecture and judgment hold on longer; junior task lists shrink first. Learn to deploy them before you become the deployed." },
+      "designer":   { "pDoom": 25, "prediction": "Mockups, asset generation, and basic UI flows are already automatable. Taste, narrative, brand strategy, and arguing with stakeholders are still yours. Figma is rolling out features that will replace some of you, faster than you'd like." },
+      "writer":     { "pDoom": 55, "prediction": "Marketing copy, summaries, SEO blog posts: cooked. Long-form journalism and original reporting hold on, but volume content roles are evaporating. Your salary is now competing with a $20/month subscription." },
+      "manager":    { "pDoom": 15, "prediction": "Hardest job to replace: coordinating humans, taking blame, navigating politics. You'll be the one deploying AI to replace your reports. Sleep well, if you can." },
+      "teacher":    { "pDoom": 40, "prediction": "Routine tutoring, grading, and lesson prep will be AI-assisted within a year. In-person presence, mentorship, and credentialing keep you employed. K-12 safer than higher ed — universities are the most exposed." },
+      "lawyer":     { "pDoom": 50, "prediction": "Document review, contract drafting, and discovery are already going. Courtroom presence, negotiation, and partnership relationships survive. Big Law associates are quietly stressed." },
+      "doctor":     { "pDoom": 10, "prediction": "Liability, licensing, and bedside presence keep humans in the loop for years. Radiology and pathology are most exposed; primary care relatively safe. Your malpractice insurer is your moat." },
+      "finance":    { "pDoom": 55, "prediction": "Bookkeeping, audit, FP&A: already on the chopping block. Complex deals and strategy survive longer. The Big Four are restructuring around this — read the room." },
+      "sales":      { "pDoom": 45, "prediction": "Outreach, CRM enrichment, and routine copy are automated. Relationship-driven enterprise sales survives; high-volume SDR roles shrink fast. Become the closer or become the bot." },
+      "trades":     { "pDoom": 5,  "prediction": "AI doesn't fix toilets. Plumbing, electrical, construction, eldercare — humans needed for the foreseeable future. The most pessimistic forecasts still need bodies for physical labor. You're fine. Probably." },
+      "researcher": { "pDoom": 40, "prediction": "AI now reads and synthesizes literature faster than you. Novel hypothesis generation and peer review still need humans. Grant pressure and publish-or-perish intensify; the floor for 'novel' is rising." },
+      "other":      { "pDoom": 35, "prediction": "Without specifics, this is a guess. Rule of thumb: how much of your work is producing standard text, code, or analysis versus judgment, physical presence, or relationships? Lean toward the latter and you're probably fine." }
+    }
   },
   "articlesOverview": "The frontier reasoning tier now spans a 24-point range on GPQA Diamond — Gemini 3.1 Pro (94.3%), Opus 4.7 (94.2%), and GPT-5.5 (93.6%) cluster at the top, while Grok 4.3 posts 90.1% and Llama 4 Maverick trails at 69.8%. On coding, GPT-5.5 and Opus 4.7 remain co-leaders at 88.7% and 87.6% SWE-bench Verified; Google answered with Gemini 3.5 Flash (May 2026) targeting agentic tasks, with 3.5 Pro still months away.",
   "articles": [
@@ -121,7 +156,7 @@
       "model": "GPT-5.5",
       "scores": { "mmlu": 92.4, "gpqa": 93.6, "swebench": 88.7, "arcagi": null },
       "source": "https://openai.com/index/introducing-gpt-5-5/",
-      "lastVerified": "2026-05-21",
+      "lastVerified": "2026-05-22",
       "arenaModels": [
         { "name": "gpt-5.5-high", "elo": 1481, "margin": 6, "rank": 8 },
         { "name": "gpt-5.4-high", "elo": 1480, "margin": 5, "rank": 10 },
@@ -158,7 +193,7 @@
       "model": "Claude Opus 4.7",
       "scores": { "mmlu": null, "gpqa": 94.2, "swebench": 87.6, "arcagi": null },
       "source": "https://www.anthropic.com/news/claude-opus-4-7",
-      "lastVerified": "2026-05-21",
+      "lastVerified": "2026-05-22",
       "arenaModels": [
         { "name": "claude-opus-4-6-thinking", "elo": 1502, "margin": 4, "rank": 1 },
         { "name": "claude-opus-4-7-thinking", "elo": 1500, "margin": 6, "rank": 2 },
@@ -185,9 +220,9 @@
     {
       "name": "Google DeepMind",
       "model": "Gemini 3.1 Pro",
-      "scores": { "mmlu": 92.6, "gpqa": 94.3, "swebench": 80.6, "arcagi": null },
-      "source": "https://deepmind.google/models/gemini/pro/",
-      "lastVerified": "2026-05-21",
+      "scores": { "mmlu": null, "gpqa": 94.3, "swebench": 80.6, "arcagi": null },
+      "source": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
+      "lastVerified": "2026-05-22",
       "arenaModels": [
         { "name": "gemini-3.1-pro-preview", "elo": 1488, "margin": 4, "rank": 6 },
         { "name": "gemini-3-pro", "elo": 1486, "margin": 4, "rank": 7 },
@@ -214,7 +249,7 @@
       "model": "Llama 4 Maverick",
       "scores": { "mmlu": null, "gpqa": 69.8, "swebench": null, "arcagi": null },
       "source": "https://www.llama.com/models/llama-4/",
-      "lastVerified": "2026-05-21",
+      "lastVerified": "2026-05-22",
       "arenaModels": [
         { "name": "muse-spark", "elo": 1489, "margin": 6, "rank": 5 }
       ]
@@ -224,15 +259,17 @@
       "model": "Grok 4.3",
       "scores": { "mmlu": null, "gpqa": 90.1, "swebench": null, "arcagi": null },
       "source": "https://designforonline.com/ai-models/xai-grok-4-3/",
-      "lastVerified": "2026-05-21",
+      "lastVerified": "2026-05-22",
       "arenaModels": [
         { "name": "grok-4.20-beta1", "elo": 1478, "margin": 5, "rank": 12 },
+        { "name": "grok-4.20-beta-0309-reasoning", "elo": 1475, "margin": 5, "rank": 15 },
         { "name": "grok-4.20-multi-agent-beta-0309", "elo": 1474, "margin": 5, "rank": 16 },
         { "name": "grok-4.1-thinking", "elo": 1467, "margin": 3, "rank": 25 },
         { "name": "grok-4.1", "elo": 1460, "margin": 3, "rank": 31 },
         { "name": "grok-4.3", "elo": 1451, "margin": 6, "rank": 41 },
         { "name": "grok-4-1-fast-reasoning", "elo": 1431, "margin": 3, "rank": 66 },
         { "name": "grok-4-fast-chat", "elo": 1421, "margin": 8, "rank": 81 },
+        { "name": "grok-3-preview-02-24", "elo": 1412, "margin": 4, "rank": 96 },
         { "name": "grok-4-0709", "elo": 1410, "margin": 4, "rank": 100 },
         { "name": "grok-4-fast-reasoning", "elo": 1404, "margin": 5, "rank": 106 },
         { "name": "grok-3-mini-high", "elo": 1362, "margin": 5, "rank": 153 },

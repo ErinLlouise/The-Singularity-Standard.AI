@@ -261,6 +261,7 @@ async function refresh() {
     cachedData = data;
     renderUpdated(data.lastUpdated);
     renderDoomMeter(data.doomMeter);
+    renderPersonalDoom(data.personalDoom);
     renderLeaderboard(data);
     renderArticles(data.articles);
     renderQuiz(data.toolQuiz);
@@ -483,6 +484,78 @@ function setupOverview() {
 
 const quizState = {};
 let quizWired = false;
+let personalDoomWired = false;
+
+function renderPersonalDoom(personal) {
+  const questionEl = document.getElementById("personal-doom-question");
+  const resultEl = document.getElementById("personal-doom-result");
+  const meterEl = document.getElementById("personal-doom-meter");
+  const predictionEl = document.getElementById("personal-doom-prediction");
+  const methodologyEl = document.getElementById("personal-doom-methodology");
+  const headingEl = document.getElementById("personal-doom-heading");
+  if (!questionEl) return;
+  if (!personal || !personal.question || !Array.isArray(personal.question.options)) {
+    questionEl.innerHTML = `<div class="empty-state">Add a <code>personalDoom</code> block to data.json.</div>`;
+    return;
+  }
+
+  if (headingEl && personal.label) headingEl.textContent = personal.label;
+  if (methodologyEl) methodologyEl.textContent = personal.methodology || "";
+
+  questionEl.innerHTML = `
+    <span class="quiz-q-label">${escapeAttr(personal.question.label)}</span>
+    <div class="quiz-chips" role="radiogroup" aria-label="${escapeAttr(personal.question.label)}">
+      ${personal.question.options
+        .map(
+          (opt) => `
+            <button type="button" class="quiz-chip" role="radio"
+              aria-pressed="false" data-value="${escapeAttr(opt.value)}">${escapeAttr(opt.label)}</button>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+
+  if (resultEl) resultEl.hidden = true;
+  if (predictionEl) predictionEl.textContent = "";
+  if (meterEl) meterEl.innerHTML = "";
+
+  if (personalDoomWired) return;
+  personalDoomWired = true;
+
+  questionEl.addEventListener("click", (e) => {
+    const chip = e.target.closest(".quiz-chip");
+    if (!chip) return;
+    const chipsParent = chip.closest(".quiz-chips");
+    if (!chipsParent) return;
+    chipsParent
+      .querySelectorAll(".quiz-chip")
+      .forEach((c) => c.setAttribute("aria-pressed", c === chip ? "true" : "false"));
+    const value = chip.dataset.value;
+    const pick = personal.matrix?.[value];
+    if (!pick) return;
+    const pct = Math.max(0, Math.min(100, pick.pDoom));
+    meterEl.innerHTML = `
+      <div class="doom-ring">
+        <svg class="doom-svg" viewBox="0 0 36 36" aria-hidden="true">
+          <defs>
+            <linearGradient id="personal-doom-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#7c5cff" />
+              <stop offset="100%" stop-color="#22d3ee" />
+            </linearGradient>
+          </defs>
+          <circle class="doom-bg" cx="18" cy="18" r="15.9" pathLength="100" />
+          <circle class="doom-fill" cx="18" cy="18" r="15.9" pathLength="100"
+            style="stroke: url(#personal-doom-grad);"
+            stroke-dasharray="${pct.toFixed(1)} 100" />
+        </svg>
+        <span class="doom-value">${Math.round(pct)}%</span>
+      </div>
+    `;
+    predictionEl.textContent = pick.prediction || "";
+    resultEl.hidden = false;
+  });
+}
 
 function renderQuiz(quiz) {
   const questionsEl = document.getElementById("quiz-questions");
