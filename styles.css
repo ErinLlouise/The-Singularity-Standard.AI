@@ -839,6 +839,265 @@ h1 {
   font-style: italic;
 }
 
+/* ─── New Arena view (HF-backed, multi-category sub-tabs) ───────────── */
+
+.arena-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.arena-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.arena-asof {
+  color: var(--text);
+  cursor: help;
+}
+
+.arena-source a {
+  color: var(--accent-2);
+  text-decoration: none;
+}
+
+.arena-source a:hover {
+  text-decoration: underline;
+}
+
+.arena-subtabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.arena-subtab {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.arena-subtab:hover {
+  color: var(--text);
+}
+
+.arena-subtab[aria-selected="true"] {
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(124, 92, 255, 0.22), rgba(34, 211, 238, 0.16));
+  border-color: rgba(124, 92, 255, 0.45);
+  font-weight: 500;
+}
+
+.arena-subtab-content {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  overflow-x: auto;
+}
+
+/* War Map table */
+
+.arena-warmap-wrap {
+  overflow-x: auto;
+}
+
+.arena-warmap {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.arena-warmap th,
+.arena-warmap td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.arena-warmap thead th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom-color: rgba(124, 92, 255, 0.25);
+}
+
+.arena-warmap tbody tr:last-child th,
+.arena-warmap tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.arena-warmap-lab-header {
+  min-width: 140px;
+}
+
+.arena-warmap-cat {
+  text-align: center !important;
+  font-size: 0.68rem !important;
+}
+
+.arena-warmap-fronts-header {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.arena-warmap-lab {
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+}
+
+.arena-lab-name {
+  white-space: nowrap;
+}
+
+.arena-warmap-cell {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.arena-warmap-empty {
+  color: var(--muted);
+  opacity: 0.5;
+}
+
+.arena-warmap-first {
+  background: linear-gradient(135deg, rgba(124, 92, 255, 0.22), rgba(34, 211, 238, 0.18));
+  color: var(--text);
+  font-weight: 700;
+  border-radius: 6px;
+}
+
+.arena-warmap-fronts {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  color: var(--accent-2);
+}
+
+.arena-lab-badge {
+  display: inline-block;
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+/* Per-category table */
+
+.arena-cat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.arena-cat-table th,
+.arena-cat-table td {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.arena-cat-table thead th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom-color: rgba(124, 92, 255, 0.25);
+}
+
+.arena-cat-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.arena-cat-rank {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  font-weight: 700;
+  width: 60px;
+}
+
+.arena-cat-lab {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.arena-cat-model {
+  font-family: "SF Mono", Menlo, Consolas, monospace;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.arena-cat-elo {
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-2);
+  font-weight: 600;
+  text-align: right;
+}
+
+.arena-cat-delta {
+  text-align: right;
+  width: 70px;
+}
+
+.arena-cat-note {
+  margin: 12px 0 0;
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.arena-delta {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.arena-delta-up {
+  color: #4ade80;
+}
+
+.arena-delta-down {
+  color: #f87171;
+}
+
+.arena-delta-flat {
+  color: var(--muted);
+}
+
 .row {
   background: var(--panel);
   border: 1px solid var(--border);

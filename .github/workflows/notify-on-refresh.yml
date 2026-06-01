@@ -5,6 +5,7 @@ on:
     branches: [main, v2]
     paths:
       - data.json
+      - data/leaderboard.json
   workflow_dispatch:
 
 jobs:

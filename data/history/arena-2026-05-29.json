@@ -1,0 +1,411 @@
+{
+  "source": "https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset",
+  "as_of": "2026-05-27",
+  "days_since_arena_update": 2,
+  "refreshed_at": "2026-05-29T00:00:43.818Z",
+  "categories": {
+    "conversation": {
+      "label": "The Conversation",
+      "top_labs": [
+        {
+          "rank": 1,
+          "lab_id": "anthropic",
+          "lab_name": "Anthropic",
+          "top_model": "claude-opus-4-6-thinking",
+          "elo": 1502,
+          "rating_lower": 1498,
+          "rating_upper": 1506,
+          "vote_count": 34186,
+          "delta_7d": null
+        },
+        {
+          "rank": 2,
+          "lab_id": "meta",
+          "lab_name": "Meta",
+          "top_model": "muse-spark",
+          "elo": 1489,
+          "rating_lower": 1483,
+          "rating_upper": 1495,
+          "vote_count": 12228,
+          "delta_7d": null
+        },
+        {
+          "rank": 3,
+          "lab_id": "google",
+          "lab_name": "Google DeepMind",
+          "top_model": "gemini-3.1-pro-preview",
+          "elo": 1487,
+          "rating_lower": 1483,
+          "rating_upper": 1492,
+          "vote_count": 43742,
+          "delta_7d": null
+        },
+        {
+          "rank": 4,
+          "lab_id": "openai",
+          "lab_name": "OpenAI",
+          "top_model": "gpt-5.5-high",
+          "elo": 1482,
+          "rating_lower": 1477,
+          "rating_upper": 1488,
+          "vote_count": 16573,
+          "delta_7d": null
+        },
+        {
+          "rank": 5,
+          "lab_id": "xai",
+          "lab_name": "xAI",
+          "top_model": "grok-4.20-beta1",
+          "elo": 1476,
+          "rating_lower": 1471,
+          "rating_upper": 1481,
+          "vote_count": 24468,
+          "delta_7d": null
+        }
+      ]
+    },
+    "codebase": {
+      "label": "The Codebase",
+      "top_labs": [
+        {
+          "rank": 1,
+          "lab_id": "anthropic",
+          "lab_name": "Anthropic",
+          "top_model": "claude-opus-4-7-thinking",
+          "elo": 1567,
+          "rating_lower": 1557,
+          "rating_upper": 1576,
+          "vote_count": 5270,
+          "delta_7d": null
+        },
+        {
+          "rank": 2,
+          "lab_id": "alibaba",
+          "lab_name": "Alibaba (Qwen)",
+          "top_model": "qwen3.7-max-20260517",
+          "elo": 1541,
+          "rating_lower": 1525,
+          "rating_upper": 1557,
+          "vote_count": 1522,
+          "delta_7d": null
+        },
+        {
+          "rank": 3,
+          "lab_id": "meta",
+          "lab_name": "Meta",
+          "top_model": "muse-spark",
+          "elo": 1508,
+          "rating_lower": 1492,
+          "rating_upper": 1524,
+          "vote_count": 1627,
+          "delta_7d": null
+        },
+        {
+          "rank": 4,
+          "lab_id": "google",
+          "lab_name": "Google DeepMind",
+          "top_model": "gemini-3.5-flash",
+          "elo": 1506,
+          "rating_lower": 1493,
+          "rating_upper": 1520,
+          "vote_count": 2213,
+          "delta_7d": null
+        },
+        {
+          "rank": 5,
+          "lab_id": "openai",
+          "lab_name": "OpenAI",
+          "top_model": "gpt-5.5-xhigh (codex-harness)",
+          "elo": 1505,
+          "rating_lower": 1495,
+          "rating_upper": 1515,
+          "vote_count": 4126,
+          "delta_7d": null
+        }
+      ]
+    },
+    "image": {
+      "label": "The Image",
+      "top_labs": [
+        {
+          "rank": 1,
+          "lab_id": "openai",
+          "lab_name": "OpenAI",
+          "top_model": "gpt-image-2 (medium)",
+          "elo": 1388,
+          "rating_lower": 1381,
+          "rating_upper": 1394,
+          "vote_count": 40350,
+          "delta_7d": null
+        },
+        {
+          "rank": 2,
+          "lab_id": "google",
+          "lab_name": "Google DeepMind",
+          "top_model": "gemini-3.1-flash-image-preview (nano-banana-2) [web-search]",
+          "elo": 1271,
+          "rating_lower": 1266,
+          "rating_upper": 1276,
+          "vote_count": 70937,
+          "delta_7d": null
+        },
+        {
+          "rank": 3,
+          "lab_id": "xai",
+          "lab_name": "xAI",
+          "top_model": "grok-imagine-image-quality",
+          "elo": 1228,
+          "rating_lower": 1222,
+          "rating_upper": 1234,
+          "vote_count": 19400,
+          "delta_7d": null
+        },
+        {
+          "rank": 4,
+          "lab_id": "alibaba",
+          "lab_name": "Alibaba (Qwen)",
+          "top_model": "qwen-image-2.0-pro-2026-04-22",
+          "elo": 1168,
+          "rating_lower": 1160,
+          "rating_upper": 1176,
+          "vote_count": 5170,
+          "delta_7d": null
+        },
+        {
+          "rank": 5,
+          "lab_id": "tencent",
+          "lab_name": "Tencent",
+          "top_model": "hunyuan-image-3.0",
+          "elo": 1151,
+          "rating_lower": 1148,
+          "rating_upper": 1154,
+          "vote_count": 172943,
+          "delta_7d": null
+        }
+      ]
+    },
+    "reel": {
+      "label": "The Reel",
+      "top_labs": [
+        {
+          "rank": 1,
+          "lab_id": "google",
+          "lab_name": "Google DeepMind",
+          "top_model": "veo-3.1-audio-1080p",
+          "elo": 1372,
+          "rating_lower": 1360,
+          "rating_upper": 1383,
+          "vote_count": 13978,
+          "delta_7d": null
+        },
+        {
+          "rank": 2,
+          "lab_id": "openai",
+          "lab_name": "OpenAI",
+          "top_model": "sora-2-pro",
+          "elo": 1368,
+          "rating_lower": 1360,
+          "rating_upper": 1375,
+          "vote_count": 33475,
+          "delta_7d": null
+        },
+        {
+          "rank": 3,
+          "lab_id": "xai",
+          "lab_name": "xAI",
+          "top_model": "grok-imagine-video-720p",
+          "elo": 1357,
+          "rating_lower": 1350,
+          "rating_upper": 1364,
+          "vote_count": 108058,
+          "delta_7d": null
+        },
+        {
+          "rank": 4,
+          "lab_id": "alibaba",
+          "lab_name": "Alibaba (Qwen)",
+          "top_model": "wan2.6-t2v",
+          "elo": 1341,
+          "rating_lower": 1330,
+          "rating_upper": 1353,
+          "vote_count": 24738,
+          "delta_7d": null
+        },
+        {
+          "rank": 5,
+          "lab_id": "runway",
+          "lab_name": "Runway",
+          "top_model": "runway-gen-4.5",
+          "elo": 1235,
+          "rating_lower": 1223,
+          "rating_upper": 1247,
+          "vote_count": 20839,
+          "delta_7d": null
+        }
+      ]
+    },
+    "eye": {
+      "label": "The Eye",
+      "top_labs": [
+        {
+          "rank": 1,
+          "lab_id": "anthropic",
+          "lab_name": "Anthropic",
+          "top_model": "claude-opus-4-7",
+          "elo": 1319,
+          "rating_lower": 1310,
+          "rating_upper": 1328,
+          "vote_count": 6779,
+          "delta_7d": null
+        },
+        {
+          "rank": 2,
+          "lab_id": "meta",
+          "lab_name": "Meta",
+          "top_model": "muse-spark",
+          "elo": 1309,
+          "rating_lower": 1298,
+          "rating_upper": 1319,
+          "vote_count": 4526,
+          "delta_7d": null
+        },
+        {
+          "rank": 3,
+          "lab_id": "google",
+          "lab_name": "Google DeepMind",
+          "top_model": "gemini-3-pro",
+          "elo": 1305,
+          "rating_lower": 1297,
+          "rating_upper": 1313,
+          "vote_count": 13226,
+          "delta_7d": null
+        },
+        {
+          "rank": 4,
+          "lab_id": "openai",
+          "lab_name": "OpenAI",
+          "top_model": "gpt-5.4-high",
+          "elo": 1294,
+          "rating_lower": 1285,
+          "rating_upper": 1304,
+          "vote_count": 5884,
+          "delta_7d": null
+        },
+        {
+          "rank": 5,
+          "lab_id": "alibaba",
+          "lab_name": "Alibaba (Qwen)",
+          "top_model": "qwen3.7-plus-preview",
+          "elo": 1272,
+          "rating_lower": 1261,
+          "rating_upper": 1283,
+          "vote_count": 3649,
+          "delta_7d": null
+        }
+      ]
+    }
+  },
+  "overall": {
+    "labs": [
+      {
+        "lab_id": "anthropic",
+        "lab_name": "Anthropic",
+        "ranks_by_category": {
+          "conversation": 1,
+          "codebase": 1,
+          "eye": 1
+        },
+        "fronts_won": 3,
+        "avg_rank": 1,
+        "badges": [
+          "Running the Table"
+        ]
+      },
+      {
+        "lab_id": "google",
+        "lab_name": "Google DeepMind",
+        "ranks_by_category": {
+          "conversation": 3,
+          "codebase": 4,
+          "image": 2,
+          "reel": 1,
+          "eye": 3
+        },
+        "fronts_won": 1,
+        "avg_rank": 2.6,
+        "badges": []
+      },
+      {
+        "lab_id": "openai",
+        "lab_name": "OpenAI",
+        "ranks_by_category": {
+          "conversation": 4,
+          "codebase": 5,
+          "image": 1,
+          "reel": 2,
+          "eye": 4
+        },
+        "fronts_won": 1,
+        "avg_rank": 3.2,
+        "badges": []
+      },
+      {
+        "lab_id": "meta",
+        "lab_name": "Meta",
+        "ranks_by_category": {
+          "conversation": 2,
+          "codebase": 3,
+          "eye": 2
+        },
+        "fronts_won": 0,
+        "avg_rank": 2.3333333333333335,
+        "badges": []
+      },
+      {
+        "lab_id": "xai",
+        "lab_name": "xAI",
+        "ranks_by_category": {
+          "conversation": 5,
+          "image": 3,
+          "reel": 3
+        },
+        "fronts_won": 0,
+        "avg_rank": 3.6666666666666665,
+        "badges": []
+      },
+      {
+        "lab_id": "alibaba",
+        "lab_name": "Alibaba (Qwen)",
+        "ranks_by_category": {
+          "codebase": 2,
+          "image": 4,
+          "reel": 4,
+          "eye": 5
+        },
+        "fronts_won": 0,
+        "avg_rank": 3.75,
+        "badges": []
+      },
+      {
+        "lab_id": "tencent",
+        "lab_name": "Tencent",
+        "ranks_by_category": {
+          "image": 5
+        },
+        "fronts_won": 0,
+        "avg_rank": 5,
+        "badges": []
+      },
+      {
+        "lab_id": "runway",
+        "lab_name": "Runway",
+        "ranks_by_category": {
+          "reel": 5
+        },
+        "fronts_won": 0,
+        "avg_rank": 5,
+        "badges": []
+      }
+    ]
+  }
+}

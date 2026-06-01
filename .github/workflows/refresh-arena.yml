@@ -1,0 +1,49 @@
+name: Refresh arena leaderboard
+
+on:
+  schedule:
+    # Daily at 21:00 UTC = 9am NZST (winter). 10am NZDT in summer; we live with the drift.
+    - cron: "0 21 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Run arena refresh script
+        run: node scripts/refresh-arena.mjs
+
+      - name: Commit and push if changed
+        env:
+          GH_REF: ${{ github.ref_name }}
+        run: |
+          git config user.email "arena-bot@noreply.local"
+          git config user.name "Arena Bot"
+
+          # Always keep today's history snapshot, even if the leaderboard itself
+          # didn't change — that way we get a continuous daily timeline for deltas.
+          git add data/leaderboard.json data/history/
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+
+          DATE=$(date +%Y-%m-%d)
+          git commit -m "Arena refresh: $DATE
+
+          Daily snapshot from huggingface.co/datasets/lmarena-ai/leaderboard-dataset.
+
+          Co-Authored-By: Arena Bot <noreply@local>"
+          git push origin "$GH_REF"

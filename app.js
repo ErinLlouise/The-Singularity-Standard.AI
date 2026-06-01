@@ -6,6 +6,16 @@ async function loadData() {
 const VAPID_PUBLIC_KEY = "BKHNjFNCA0jVJ81opEYBH4ovwIYb3I87QEGzpj2woI7CDsnNyorD9TDKdS8vgziXF2rSV46g3zNfxpO2GDsiSgk";
 
 let cachedData = null;
+let cachedLeaderboard = null;
+
+const ARENA_CATEGORIES = [
+  { id: "overall",      label: "Overall" },
+  { id: "conversation", label: "The Conversation" },
+  { id: "codebase",     label: "The Codebase" },
+  { id: "image",        label: "The Image" },
+  { id: "reel",         label: "The Reel" },
+  { id: "eye",          label: "The Eye" },
+];
 
 function getView() {
   return localStorage.getItem("trackerView") === "arena" ? "arena" : "benchmarks";
@@ -13,6 +23,15 @@ function getView() {
 
 function setView(v) {
   localStorage.setItem("trackerView", v);
+}
+
+function getArenaSubtab() {
+  const stored = localStorage.getItem("arenaSubtab");
+  return ARENA_CATEGORIES.some((c) => c.id === stored) ? stored : "overall";
+}
+
+function setArenaSubtab(v) {
+  localStorage.setItem("arenaSubtab", v);
 }
 
 function compositeScore(scores) {
@@ -99,11 +118,11 @@ function rowHTML(company, benchmarks, position) {
   `;
 }
 
-function renderLeaderboard(data) {
+function renderLeaderboard(data, leaderboard) {
   const view = getView();
   updateViewSwitcher(view);
   if (view === "arena") {
-    renderLeaderboardArena(data);
+    renderLeaderboardArena(leaderboard);
   } else {
     renderLeaderboardBenchmarks(data);
   }
@@ -129,95 +148,158 @@ function renderLeaderboardBenchmarks(data) {
     .join("");
 }
 
-function topArenaModel(company) {
-  const models = company.arenaModels;
-  if (!Array.isArray(models) || models.length === 0) return null;
-  return [...models].sort((a, b) => b.elo - a.elo)[0];
+function formatRelativeDate(asOf, daysSince) {
+  const d = daysSince === 0 ? "today" : daysSince === 1 ? "1 day ago" : `${daysSince} days ago`;
+  return `Arena last published: ${asOf} (${d})`;
 }
 
-function rankArena(companies) {
-  return [...companies].sort((a, b) => {
-    const aTop = topArenaModel(a);
-    const bTop = topArenaModel(b);
-    if (!aTop && !bTop) return 0;
-    if (!aTop) return 1;
-    if (!bTop) return -1;
-    return bTop.elo - aTop.elo;
-  });
-}
-
-function arenaRowHTML(company, position) {
-  const models = Array.isArray(company.arenaModels) ? company.arenaModels : [];
-  const topModel = topArenaModel(company);
-
-  if (!topModel) {
-    return `
-      <article class="row arena">
-        <div class="row-head">
-          <div class="rank-name">
-            <span class="rank">#${position}</span>
-            <span class="company">${escapeAttr(company.name)}</span>
-          </div>
-          <span class="arena-no-data">no Arena entries</span>
-        </div>
-      </article>
-    `;
+function deltaBadgeHTML(delta) {
+  if (delta === null || delta === undefined || delta === 0) {
+    return `<span class="arena-delta arena-delta-flat">—</span>`;
   }
+  if (delta > 0) {
+    return `<span class="arena-delta arena-delta-up">▲${delta}</span>`;
+  }
+  return `<span class="arena-delta arena-delta-down">▼${Math.abs(delta)}</span>`;
+}
 
-  const topClass = position === 1 ? "row arena top-1" : "row arena";
-  const modelItems = models
-    .map(
-      (m) => `
-        <div class="arena-model-item">
-          <span class="arena-model-rank">#${m.rank}</span>
-          <span class="arena-model-name">${escapeAttr(m.name)}</span>
-          <span class="arena-model-elo">${m.elo}</span>
-          <span class="arena-model-margin">±${m.margin}</span>
-        </div>
-      `
-    )
+function badgeChipsHTML(badges) {
+  if (!Array.isArray(badges) || badges.length === 0) return "";
+  return badges
+    .map((b) => `<span class="arena-lab-badge">${escapeAttr(b)}</span>`)
     .join("");
+}
 
-  const expandBtn =
-    models.length > 1
-      ? `<button class="arena-expand-btn" type="button" data-toggle-list>+ Show all ${models.length} models</button>`
-      : "";
-
+function renderArenaOverall(arena) {
+  const labs = arena.overall?.labs || [];
+  if (labs.length === 0) {
+    return `<div class="empty-state">No labs ranked yet.</div>`;
+  }
+  const cats = ARENA_CATEGORIES.filter((c) => c.id !== "overall");
+  const headerCols = cats
+    .map((c) => `<th scope="col" class="arena-warmap-cat">${escapeAttr(c.label)}</th>`)
+    .join("");
+  const rows = labs
+    .map((lab) => {
+      const cells = cats
+        .map((c) => {
+          const rank = lab.ranks_by_category?.[c.id];
+          if (!rank) return `<td class="arena-warmap-cell arena-warmap-empty">—</td>`;
+          const cls =
+            rank === 1
+              ? "arena-warmap-cell arena-warmap-first"
+              : "arena-warmap-cell";
+          return `<td class="${cls}">#${rank}</td>`;
+        })
+        .join("");
+      return `
+        <tr>
+          <th scope="row" class="arena-warmap-lab">
+            <span class="arena-lab-name">${escapeAttr(lab.lab_name)}</span>
+            ${badgeChipsHTML(lab.badges)}
+          </th>
+          ${cells}
+          <td class="arena-warmap-fronts">${lab.fronts_won}</td>
+        </tr>
+      `;
+    })
+    .join("");
   return `
-    <article class="${topClass}">
-      <div class="row-head">
-        <div class="rank-name">
-          <span class="rank">#${position}</span>
-          <span class="company">${escapeAttr(company.name)}</span>
-          <span class="arena-rank-badge">arena #${topModel.rank}</span>
-        </div>
-        <span class="arena-elo">${topModel.elo}<span class="arena-margin">±${topModel.margin}</span></span>
-      </div>
-      <div class="arena-headline">
-        <span class="arena-top-model">${escapeAttr(topModel.name)}</span>
-      </div>
-      ${expandBtn}
-      <div class="arena-model-list">${modelItems}</div>
-    </article>
+    <div class="arena-warmap-wrap">
+      <table class="arena-warmap">
+        <thead>
+          <tr>
+            <th scope="col" class="arena-warmap-lab-header">Lab</th>
+            ${headerCols}
+            <th scope="col" class="arena-warmap-fronts-header" title="Categories where this lab holds #1">Fronts Won</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
   `;
 }
 
-function renderLeaderboardArena(data) {
-  const container = document.getElementById("leaderboard");
-  const ranked = rankArena(data.companies);
-  const anyData = ranked.some((c) => topArenaModel(c) !== null);
+function renderArenaCategory(arena, categoryId) {
+  const cat = arena.categories?.[categoryId];
+  const top = cat?.top_labs || [];
+  if (top.length === 0) {
+    return `<div class="empty-state">No labs ranked in this category yet.</div>`;
+  }
+  const rows = top
+    .map(
+      (entry) => `
+        <tr>
+          <td class="arena-cat-rank">#${entry.rank}</td>
+          <td class="arena-cat-lab">${escapeAttr(entry.lab_name)}</td>
+          <td class="arena-cat-model">${escapeAttr(entry.top_model)}</td>
+          <td class="arena-cat-elo">${entry.elo}</td>
+          <td class="arena-cat-delta">${deltaBadgeHTML(entry.delta_7d)}</td>
+        </tr>
+      `
+    )
+    .join("");
+  const note =
+    top.length < 5
+      ? `<p class="arena-cat-note">Showing ${top.length} labs — fewer than 5 labs currently ranked in this category.</p>`
+      : "";
+  return `
+    <table class="arena-cat-table">
+      <thead>
+        <tr>
+          <th scope="col">Rank</th>
+          <th scope="col">Lab</th>
+          <th scope="col">Top model</th>
+          <th scope="col">Elo</th>
+          <th scope="col" title="Rank change since last snapshot">Δ</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${note}
+  `;
+}
 
-  if (!anyData) {
+function renderLeaderboardArena(leaderboard) {
+  const container = document.getElementById("leaderboard");
+  const arena = leaderboard?.arena_view;
+  if (!arena) {
     container.innerHTML = `
       <div class="empty-state">
-        <p><strong>No Arena data yet.</strong></p>
-        <p>Run the updater to populate <code>arenaModels</code> for each company.</p>
+        <p><strong>Arena data not loaded yet.</strong></p>
+        <p>The daily refresh writes <code>data/leaderboard.json</code>. Run <code>node scripts/refresh-arena.mjs</code> locally to seed it.</p>
       </div>
     `;
     return;
   }
 
-  container.innerHTML = ranked.map((c, i) => arenaRowHTML(c, i + 1)).join("");
+  const activeSubtab = getArenaSubtab();
+  const subtabs = ARENA_CATEGORIES.map(
+    (c) => `
+      <button type="button" class="arena-subtab" data-arena-subtab="${escapeAttr(c.id)}"
+        aria-selected="${c.id === activeSubtab ? "true" : "false"}">${escapeAttr(c.label)}</button>
+    `
+  ).join("");
+
+  const content =
+    activeSubtab === "overall"
+      ? renderArenaOverall(arena)
+      : renderArenaCategory(arena, activeSubtab);
+
+  const asOf = formatRelativeDate(arena.as_of, arena.days_since_arena_update);
+
+  container.innerHTML = `
+    <div class="arena-container">
+      <div class="arena-meta">
+        <span class="arena-asof" title="Arena batches updates; the snapshot date reflects when lmarena.ai last published, not when this site fetched.">${escapeAttr(asOf)}</span>
+        <span class="arena-source">via <a href="https://huggingface.co/datasets/lmarena-ai/leaderboard-dataset" target="_blank" rel="noopener noreferrer">lmarena-ai/leaderboard-dataset</a></span>
+      </div>
+      <div class="arena-subtabs" role="tablist" aria-label="Arena category">
+        ${subtabs}
+      </div>
+      <div class="arena-subtab-content">${content}</div>
+    </div>
+  `;
 }
 
 function updateViewSwitcher(view) {
@@ -233,20 +315,18 @@ function setupViewSwitcher() {
   document.querySelectorAll(".view-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
       setView(btn.dataset.view);
-      if (cachedData) renderLeaderboard(cachedData);
+      renderLeaderboard(cachedData, cachedLeaderboard);
     });
   });
 
+  // Event-delegated arena sub-tab click handler.
   document.getElementById("leaderboard").addEventListener("click", (e) => {
-    const btn = e.target.closest("[data-toggle-list]");
-    if (!btn) return;
-    const row = btn.closest(".row");
-    row.classList.toggle("expanded");
-    const expanded = row.classList.contains("expanded");
-    const count = row.querySelectorAll(".arena-model-item").length;
-    btn.textContent = expanded
-      ? `− Hide ${count} models`
-      : `+ Show all ${count} models`;
+    const subtab = e.target.closest("[data-arena-subtab]");
+    if (subtab) {
+      const id = subtab.dataset.arenaSubtab;
+      setArenaSubtab(id);
+      renderLeaderboard(cachedData, cachedLeaderboard);
+    }
   });
 }
 
@@ -259,10 +339,20 @@ async function refresh() {
   try {
     const data = await loadData();
     cachedData = data;
+    // Arena view reads from a separate file written by the deterministic refresh script.
+    // This file may not exist yet on fresh checkouts; fall back to null and show an empty state.
+    let leaderboard = null;
+    try {
+      const lbRes = await fetch("data/leaderboard.json", { cache: "no-store" });
+      if (lbRes.ok) leaderboard = await lbRes.json();
+    } catch (_) {
+      // Network or parse error; arena view will show its empty state.
+    }
+    cachedLeaderboard = leaderboard;
     renderUpdated(data.lastUpdated);
     renderDoomMeter(data.doomMeter);
     renderPersonalDoom(data.personalDoom);
-    renderLeaderboard(data);
+    renderLeaderboard(data, leaderboard);
     renderArticles(data.articles);
     renderQuiz(data.toolQuiz);
   } catch (err) {

@@ -1,19 +1,23 @@
 ---
 name: agi-tracker-updater
-description: Use this agent when the user asks to refresh, update, or re-verify any data in the Race to AGI tracker. It updates five sections of data.json — companies (flagship-model benchmarks), arenaModels (per-company arena.ai Elo entries), doomMeter (p(doom) expert estimates), articlesOverview (1–2 sentence synthesis), and benchmarks (descriptor verification) — by looking up current information from official sources via WebSearch and WebFetch. Invoke proactively when the user says "refresh the tracker", "update AGI scores", "is the leaderboard current?", or any variant.
+description: Use this agent for the REPAIR PATH on the Deadly Serious tracker. Arena leaderboard data is handled by a deterministic GitHub Action (scripts/refresh-arena.mjs) — this agent does NOT touch arena. It handles the agentic tasks that still need judgment: refreshing each company's benchmark scores, doomMeter, and articlesOverview, and investigating failures of the deterministic pipeline. Invoke when the user says "refresh the benchmarks", "a new flagship model dropped — add it", "the arena pipeline failed", or any variant.
 tools: WebSearch, WebFetch, Read, Edit, Bash
 ---
 
-You refresh `data.json` for the Race to AGI tracker. The file lives at `data.json` in the project root and has these top-level keys you may modify:
+You refresh the parts of `data.json` that still need judgment. The Deadly Serious tracker now has two data paths:
+
+- **Deterministic daily** (NOT your job): `scripts/refresh-arena.mjs` pulls structured rows from `huggingface.co/datasets/lmarena-ai/leaderboard-dataset`, applies a provider lookup table, and writes `data/leaderboard.json` + `data/history/arena-YYYY-MM-DD.json`. Runs as a GitHub Action. If this pipeline succeeded recently, leave arena alone.
+- **Agentic on-demand** (this is your job): the sections below that involve subjective judgment, source hunting, or new-model intake.
+
+You read and edit `data.json` in the project root. Top-level keys you may modify:
 
 - `lastUpdated` — date string
-- `arenaMetric` — `{ name, source, voteCount, asOf, description }`
 - `doomMeter` — `{ label, methodology, experts: [] }`
 - `articlesOverview` — string
 - `benchmarks` — array of `{ id, label, description }`
-- `companies` — array of `{ name, model, scores, source, lastVerified, arenaModels }`
+- `companies` — array of `{ name, model, scores, source, lastVerified }`
 
-You **never** modify `articles` (the article cards are managed separately).
+You **never** modify: `articles`, `arenaMetric`, `arenaModels` on companies, `personalDoom`, `toolQuiz`. Arena data has moved to `data/leaderboard.json` — leave that file alone too unless you're explicitly in repair mode.
 
 ## Step 1 — read the current state
 
@@ -44,28 +48,7 @@ For each of OpenAI, Anthropic, Google DeepMind, Meta, xAI:
 - **One source per company per refresh.** If sources disagree, prefer the lab's own publication.
 - **Don't change any company's `name` field.**
 
-## Step 3 — refresh arena entries (`arenaMetric` + per-company `arenaModels`)
-
-The tracker shows a second view powered by https://arena.ai/leaderboard/text — a human-preference Elo leaderboard. Refresh it as follows:
-
-1. **WebFetch once.** Hit `https://arena.ai/leaderboard/text` with a prompt that asks for every model whose provider is one of: Anthropic, OpenAI, Google (or Google DeepMind), Meta, xAI. Ask the model to return, per provider, an Elo-descending list of `{ rank, model, elo, margin }` rows, plus the snapshot's total vote count and "as of" date.
-2. **Update top-level `arenaMetric`:**
-   - `voteCount`: integer
-   - `asOf`: snapshot date in `YYYY-MM-DD`
-   - leave `name`, `source`, `description` unchanged unless the upstream metric definition has shifted
-3. **Update each company's `arenaModels`:**
-   - Replace the array with the freshly fetched list for that provider
-   - Each entry is `{ name, elo, margin, rank }` where `rank` is the global rank across the whole leaderboard (not per-provider)
-   - If a lab has zero models on Arena right now, set `arenaModels` to `[]` (empty array, not null)
-
-### Hard rules for arena
-
-- **Single source: arena.ai only.** Do not splice in numbers from other Elo leaderboards (LMArena, OpenRouter, etc.) — they use different vote pools and methodologies.
-- **Don't trust mis-grouping.** If the WebFetch returns a model under the wrong provider (e.g. a Grok model under OpenAI), drop it. Sanity-check the model-name prefix against the provider (`gpt-*`/`o*` → OpenAI, `claude-*` → Anthropic, `gemini-*`/`gemma-*` → Google, `grok-*` → xAI; Meta is usually `llama-*` or product code names).
-- **One WebFetch per refresh.** No need to hit arena.ai multiple times.
-- **Preserve all 5 companies.** Don't add or remove companies based on arena coverage.
-
-## Step 4 — refresh `doomMeter.experts`
+## Step 3 — refresh `doomMeter.experts`
 
 The current list contains a handful of named AI researchers and their publicly stated p(doom) figures. For each expert:
 
@@ -80,7 +63,7 @@ The current list contains a handful of named AI researchers and their publicly s
 - **Don't add new experts** unless explicitly asked. Keep the existing list.
 - The `label`, `methodology` strings stay as-is unless they become misleading.
 
-## Step 5 — refresh `articlesOverview`
+## Step 4 — refresh `articlesOverview`
 
 Read the (now-updated) `companies` array and the existing `articles` array. Write a fresh 1–2 sentence synthesis of where the frontier labs sit, matching the existing style:
 
@@ -91,7 +74,7 @@ Read the (now-updated) `companies` array and the existing `articles` array. Writ
 
 If nothing meaningful changed since the previous overview, leave it.
 
-## Step 6 — verify `benchmarks`
+## Step 5 — verify `benchmarks`
 
 The `benchmarks` array describes the four metrics shown in the leaderboard's Benchmarks view. Most refreshes will leave it untouched. Only update when:
 
@@ -100,7 +83,7 @@ The `benchmarks` array describes the four metrics shown in the leaderboard's Ben
 
 **Never change a benchmark's `id`** — that string is the key in `companies.scores` and changing it breaks the lookup.
 
-## Step 7 — bump `lastUpdated`
+## Step 6 — bump `lastUpdated`
 
 After every other section is done, set the top-level `lastUpdated` to today's date.
 
@@ -109,15 +92,23 @@ After every other section is done, set the top-level `lastUpdated` to today's da
 - Use **Edit** with surgical, uniquely-anchored replacements. Do not rewrite the whole file with Write.
 - Each Edit must preserve JSON validity. If you stage a change that would leave the file invalid, run another Edit to fix it before stopping.
 - Cap your WebSearch calls at ~3 per company and ~2 per expert; if you can't find a verifiable number after that, leave the existing value and note it in the final report.
-- For arena, exactly **one** WebFetch is enough.
+
+## Repair path: arena pipeline failures
+
+If the user reports the deterministic arena pipeline failing or a model showing up under the wrong lab:
+
+- Read `scripts/refresh-arena.mjs` and `data/leaderboard.json` (most recent), plus the GitHub Actions log if available
+- Identify whether the issue is: (a) HF dataset schema changed, (b) a new organization name we don't recognize, (c) a model name prefix that doesn't match any rule, (d) HF datasets-server returned an unexpected shape
+- Propose a **diff** to either `ORG_ALIAS`, `LAB_DISPLAY`, `PREFIX_RULES`, or the fetch/parse code — do not write directly to production data
+- Output the diff for human review
 
 ## Final report
 
-When you finish, summarize for the user in under 18 lines:
+When you finish, summarize for the user in under 15 lines:
 
 - **companies**: each company → model → composite (mean of available scores), with a callout for newly filled-in or newly nulled benchmarks
-- **arena**: snapshot `asOf` + `voteCount`; which lab now has the top model overall; any lab that gained/lost an arena listing since last refresh
 - **doomMeter**: which experts (if any) had `pDoom` changed and the source
 - **articlesOverview**: rewritten or kept, with a one-line reason
 - **benchmarks**: any descriptor or label updates
 - **caveats**: blocked WebFetches, conflicting sources, freshly-dropped models with thin coverage
+- **arena**: NOT your job — but if the user asked about arena specifically, point them at the GitHub Action run logs or propose a repair diff per the "repair path" section above
