@@ -1,0 +1,179 @@
+{
+  "label": "How f*cked are you?",
+  "methodology": "Opinionated dark-comedy estimates of role-specific AI exposure over the next 2-3 years. Bucketed by role nature and industry, with the job title echoed back for flavor. Vibes, not forecasts.",
+
+  "roleNatures": {
+    "creative": {
+      "label": "creative",
+      "basePercentage": 58,
+      "tasksAutomatable": 65,
+      "timeline": "12-24 months",
+      "evolution": "shift",
+      "harderToReplace": "The thing you do that AI can't is pick which ideas are worth executing — taste, narrative coherence, knowing when an output is wrong even if it looks right. The cliff is for the people whose job is just to produce passable {industry} output at volume."
+    },
+    "strategic": {
+      "label": "strategic",
+      "basePercentage": 22,
+      "tasksAutomatable": 35,
+      "timeline": "3-5 years",
+      "evolution": "evolve",
+      "harderToReplace": "Strategy work depends on judgment, political navigation, and being the human accountable when a call goes wrong. AI is a fast research analyst for you, not a replacement — at least until {industry} flattens the decision-making layer too."
+    },
+    "technical": {
+      "label": "technical",
+      "basePercentage": 42,
+      "tasksAutomatable": 55,
+      "timeline": "1-3 years",
+      "evolution": "shift",
+      "harderToReplace": "Coding agents will eat the routine implementation tier of your job. What survives longer is system design, debugging in production at 2am, and being the engineer who knows why a decision was made in 2019. Junior task lists shrink first; the {industry} stack you support keeps you employed."
+    },
+    "administrative": {
+      "label": "administrative",
+      "basePercentage": 68,
+      "tasksAutomatable": 78,
+      "timeline": "6-18 months",
+      "evolution": "disappear",
+      "harderToReplace": "The part of your job that isn't moving form-fields between systems is the part that lasts: judgment calls, knowing which exception matters, managing the humans around the work. Anything described as 'processing' in your {industry} job listing is on the chopping block."
+    }
+  },
+
+  "industries": [
+    {
+      "id": "tech",
+      "label": "tech",
+      "aliases": ["tech", "technology", "software", "saas", "engineering", "startup", "developer", "it ", "data"],
+      "modifier": 5,
+      "context": "Tech is the canary on this — your industry is building the thing eating its own workforce first. Layoffs are framed as 'efficiency'; everyone you know is updating their LinkedIn."
+    },
+    {
+      "id": "finance",
+      "label": "finance",
+      "aliases": ["finance", "fintech", "banking", "investment", "accounting", "audit", "trading", "wealth"],
+      "modifier": 8,
+      "context": "Finance is automating the back office at speed. Bookkeeping, basic audit, and FP&A are already going; the Big Four are restructuring. What survives is client trust and the parts where someone has to be held legally responsible."
+    },
+    {
+      "id": "healthcare",
+      "label": "healthcare",
+      "aliases": ["health", "healthcare", "medical", "hospital", "pharma", "biotech", "clinical", "nursing", "doctor"],
+      "modifier": -10,
+      "context": "Healthcare moves slowly thanks to licensing, liability, and the simple fact that bodies need bodies. AI is changing diagnostics and admin around you, but the front line stays human longer than most industries."
+    },
+    {
+      "id": "legal",
+      "label": "legal",
+      "aliases": ["law", "legal", "lawyer", "attorney", "paralegal", "compliance", "court"],
+      "modifier": 5,
+      "context": "Legal AI is gutting document review, contract drafting, and discovery. Big Law associates are quietly stressed. What survives is courtroom presence, negotiation, partnership relationships, and being the lawyer a client wants to call when something is on fire."
+    },
+    {
+      "id": "media",
+      "label": "media",
+      "aliases": ["media", "journalism", "journalist", "news", "publishing", "writer", "editor", "reporter"],
+      "modifier": 12,
+      "context": "Media is taking the worst of it. Volume content, SEO copy, summaries, basic reporting — already cooked. The titles that survive are doing original reporting humans can't fake; everyone else is competing with a $20 subscription."
+    },
+    {
+      "id": "marketing",
+      "label": "marketing",
+      "aliases": ["marketing", "advertising", "ad agency", "brand", "growth", "performance", "social media", "pr ", "communications"],
+      "modifier": 10,
+      "context": "Marketing teams are shrinking and the survivors are running 10x more output through AI. Volume copy, ad variants, CRM personalization — all automated. Strategy and brand work stick around, mass-production roles do not."
+    },
+    {
+      "id": "design",
+      "label": "design",
+      "aliases": ["design", "designer", "ux", "ui", "product design", "graphic"],
+      "modifier": 0,
+      "context": "Design tools are absorbing AI features faster than designers can audit them. Routine asset generation and UI flows are increasingly automated, but the part of design that's actually thinking — system, brand, narrative — out-survives the Figma plugins. For now."
+    },
+    {
+      "id": "retail",
+      "label": "retail",
+      "aliases": ["retail", "ecommerce", "e-commerce", "d2c", "consumer", "shop", "merchandising"],
+      "modifier": 3,
+      "context": "Retail is using AI to flatten merchandising, customer service, and copy at the same time. Physical store work survives because someone has to fold the jumpers; the back office gets thinner every quarter."
+    },
+    {
+      "id": "education",
+      "label": "education",
+      "aliases": ["education", "school", "university", "teacher", "professor", "academic", "edtech", "learning"],
+      "modifier": -3,
+      "context": "Education is a tale of two timelines: K-12 stays human because parents pay for humans; higher ed is in crisis because students realized they could pass without showing up. Routine tutoring and grading are AI-assisted now."
+    },
+    {
+      "id": "government",
+      "label": "the public sector",
+      "aliases": ["government", "public sector", "civil service", "policy", "council", "agency", "nonprofit", "ngo"],
+      "modifier": -8,
+      "context": "Public sector procurement is too slow to catch up with the technology. You'll watch private-sector peers get displaced for 3-5 years before any of it reaches your desk. The job security is real, even if the work isn't getting more interesting."
+    },
+    {
+      "id": "manufacturing",
+      "label": "manufacturing",
+      "aliases": ["manufacturing", "factory", "industrial", "logistics", "supply chain", "warehouse", "production"],
+      "modifier": -5,
+      "context": "Manufacturing is automating the floor for the third decade running; AI is mostly upgrading the planning and QA layer. If your work is on the floor, the timeline is robots, not LLMs. If it's in the office, expect AI scheduling and ops tools to compress middle management."
+    },
+    {
+      "id": "services",
+      "label": "consulting / services",
+      "aliases": ["consulting", "consultant", "services", "professional services", "advisory", "agency"],
+      "modifier": 7,
+      "context": "Consulting is racing to bill AI work at human rates while the model does most of it. Junior consultants are the most exposed since their job was synthesizing decks from public sources. Partners are fine — they sell relationships, not analysis."
+    }
+  ],
+
+  "fallbackIndustry": {
+    "label": "your industry",
+    "modifier": 0,
+    "context": "Hard to be specific without knowing the industry, but the general trend holds: anything reproducible from a prompt is on a timer, and anything requiring judgment, presence, or relationships is on a longer one."
+  },
+
+  "verdictBands": [
+    { "max": 20, "options": ["weirdly safe", "fine, somehow", "uncomfortably bulletproof"] },
+    { "max": 40, "options": ["mostly fine", "low simmer of doom", "you'll be OK"] },
+    { "max": 60, "options": ["moderately f*cked", "feeling the heat", "on a timer"] },
+    { "max": 80, "options": ["pretty cooked", "writing on the wall", "living on borrowed time"] },
+    { "max": 100, "options": ["deeply f*cked", "start a Substack", "begin learning to weld"] }
+  ],
+
+  "tools": {
+    "creative": {
+      "intro": "Lean into the parts of {industry} work that taste and narrative still win. These tools handle the volume so you can spend time on what's actually hard.",
+      "items": [
+        { "name": "Claude", "why": "Best at matching voice, careful editing, and resisting the urge to be generic — useful for any {industry} writing where the words actually matter.", "url": "https://claude.ai/" },
+        { "name": "Midjourney", "why": "Strongest aesthetic control if you need to mock up visuals fast without burning a designer's afternoon.", "url": "https://www.midjourney.com/" },
+        { "name": "Figma + AI", "why": "Figma's AI features now do the first 30% of any layout. Use them; stop pretending you don't.", "url": "https://www.figma.com/" },
+        { "name": "Descript", "why": "If your work touches audio or video, Descript edits both like text. Massive time-saver for {industry} content production.", "url": "https://www.descript.com/" }
+      ]
+    },
+    "strategic": {
+      "intro": "Strategy work is mostly synthesis, debate, and being the person who gets blamed. AI is a fantastic junior analyst for the first part; you're still on the hook for the rest.",
+      "items": [
+        { "name": "Claude", "why": "Long context + good reasoning makes it the best tool for digesting reports, prepping briefs, and stress-testing your own thinking on {industry} decisions.", "url": "https://claude.ai/" },
+        { "name": "Perplexity Pro", "why": "Citations-first answers. Treat it as your always-available analyst for {industry} market research and competitive scans.", "url": "https://www.perplexity.ai/" },
+        { "name": "NotebookLM", "why": "Drop in 20 PDFs from a deep-dive and ask cross-cutting questions. Better than re-reading everything yourself.", "url": "https://notebooklm.google/" },
+        { "name": "ChatGPT", "why": "Voice mode for thinking out loud on commutes; broad feature surface for whatever ad-hoc {industry} task comes up.", "url": "https://chat.openai.com/" }
+      ]
+    },
+    "technical": {
+      "intro": "AI coding tools have crossed the line from 'cute autocomplete' to 'genuine pair programmer'. Use them; the alternative is being slower than the colleague who does.",
+      "items": [
+        { "name": "Claude Code", "why": "Anthropic's CLI/IDE agent — strongest at multi-file edits, debugging, and exploring an unfamiliar {industry} codebase.", "url": "https://claude.com/claude-code" },
+        { "name": "Cursor", "why": "AI-native VS Code fork. If you want chat + inline edits without leaving your editor, this is the best UX right now.", "url": "https://www.cursor.com/" },
+        { "name": "GitHub Copilot", "why": "$10/mo for autocomplete in any IDE. Lowest-friction way to bring AI into existing {industry} engineering workflows.", "url": "https://github.com/features/copilot" },
+        { "name": "Perplexity Pro", "why": "When you need to research a library, an error message, or a {industry}-specific stack quickly, it beats Stack Overflow.", "url": "https://www.perplexity.ai/" }
+      ]
+    },
+    "administrative": {
+      "intro": "The bulk of admin work is moving information between systems and writing the same email 40 ways. Both are AI's home turf — the trick is making sure you're the one wielding the tools, not being replaced by them.",
+      "items": [
+        { "name": "ChatGPT", "why": "Drafting emails, summarizing meetings, reformatting spreadsheets — the boring everyday tasks that eat your day in {industry} work.", "url": "https://chat.openai.com/" },
+        { "name": "Claude", "why": "Better for long-document work: digesting a 30-page policy, comparing contracts, summarizing whatever Compliance dropped on you.", "url": "https://claude.ai/" },
+        { "name": "Notion AI", "why": "Inside the doc and database you're already using. Cuts down on the 'put it in a different format' tax.", "url": "https://www.notion.so/product/ai" },
+        { "name": "Zapier / Make", "why": "Not strictly AI, but the multiplier matters: connect AI to the systems where your {industry} work actually lives, automate the truly boring stuff.", "url": "https://zapier.com/" }
+      ]
+    }
+  }
+}

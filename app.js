@@ -599,38 +599,90 @@ function setupOverview() {
 const quizState = {};
 let quizWired = false;
 
-// ─── Section 1 + 2: AI-driven personal doom & tools (via Cloudflare Worker) ──
+// ─── Section 1 + 2: templated personal doom & tools (local lookup) ──────
 
 let personalDoomFormWired = false;
 let personalDoomInputs = null;        // { jobTitle, industry, roleNature }
-let personalDoomResult = null;        // doom API response
-let forMyRoleToolsResult = null;      // tools API response (cached)
+let personalDoomResult = null;        // computed doom result
+let forMyRoleToolsResult = null;      // computed tools result (cached)
 let forMyRoleInputsKey = null;        // serialized inputs for cache invalidation
+let personalDoomData = null;          // loaded from data/personal-doom.json
+let personalDoomDataPromise = null;   // de-dupe the fetch
 
-function getWorkerUrl() {
-  return (window.DEADLY_SERIOUS_CONFIG && window.DEADLY_SERIOUS_CONFIG.workerUrl) || "";
+function loadPersonalDoomData() {
+  if (personalDoomData) return Promise.resolve(personalDoomData);
+  if (personalDoomDataPromise) return personalDoomDataPromise;
+  personalDoomDataPromise = fetch("data/personal-doom.json", { cache: "no-store" })
+    .then((r) => {
+      if (!r.ok) throw new Error(`Failed to load personal-doom.json: ${r.status}`);
+      return r.json();
+    })
+    .then((data) => {
+      personalDoomData = data;
+      return data;
+    });
+  return personalDoomDataPromise;
 }
 
-async function callWorker(action, payload) {
-  const url = getWorkerUrl();
-  if (!url) {
-    throw new Error(
-      "AI verdicts aren't configured yet. Deploy the Cloudflare Worker and paste its URL into config.js — see worker/README.md."
-    );
+function hashString(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+function matchIndustry(text, industries, fallback) {
+  const lower = (text || "").toLowerCase().trim();
+  if (!lower) return fallback;
+  for (const ind of industries) {
+    for (const alias of ind.aliases || []) {
+      if (lower.includes(alias.toLowerCase())) return ind;
+    }
   }
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, ...payload }),
-  });
-  let data = {};
-  try {
-    data = await res.json();
-  } catch {}
-  if (!res.ok) {
-    throw new Error(data.error || `Worker returned HTTP ${res.status}`);
-  }
-  return data;
+  return fallback;
+}
+
+function pickVerdict(pct, inputs, bands) {
+  const band = bands.find((b) => pct <= b.max) || bands[bands.length - 1];
+  const options = band.options || ["—"];
+  const idx = hashString(`${inputs.jobTitle}|${inputs.roleNature}`) % options.length;
+  return options[idx];
+}
+
+function interpolate(template, vars) {
+  return String(template || "").replace(/\{(\w+)\}/g, (_, key) =>
+    vars[key] !== undefined ? vars[key] : ""
+  );
+}
+
+function computeDoom(inputs, data) {
+  const base = data.roleNatures[inputs.roleNature];
+  const industry = matchIndustry(inputs.industry, data.industries, data.fallbackIndustry);
+  const percentage = Math.max(0, Math.min(100, base.basePercentage + (industry.modifier || 0)));
+  const interp = { jobTitle: inputs.jobTitle, industry: industry.label };
+  return {
+    verdict: pickVerdict(percentage, inputs, data.verdictBands),
+    percentage,
+    tasksAutomatable: base.tasksAutomatable,
+    timeline: base.timeline,
+    evolution: base.evolution,
+    harderToReplace: interpolate(base.harderToReplace, interp),
+    industryContext: industry.context,
+  };
+}
+
+function computeTools(inputs, data) {
+  const bundle = data.tools[inputs.roleNature];
+  if (!bundle) return { intro: "", tools: [] };
+  const industry = matchIndustry(inputs.industry, data.industries, data.fallbackIndustry);
+  const interp = { jobTitle: inputs.jobTitle, industry: industry.label };
+  return {
+    intro: interpolate(bundle.intro, interp),
+    tools: (bundle.items || []).map((item) => ({
+      name: item.name,
+      why: interpolate(item.why, interp),
+      url: item.url,
+    })),
+  };
 }
 
 function evolutionLabel(e) {
@@ -721,19 +773,18 @@ function setupPersonalDoom() {
       return;
     }
 
-    submitBtn.classList.add("loading");
     submitBtn.disabled = true;
 
     try {
+      const data = await loadPersonalDoomData();
       const inputs = { jobTitle, industry, roleNature: selectedNature };
-      const result = await callWorker("doom", inputs);
+      const result = computeDoom(inputs, data);
 
       personalDoomInputs = inputs;
       personalDoomResult = result;
       // Invalidate the For-my-role cache when inputs change
       forMyRoleToolsResult = null;
       forMyRoleInputsKey = null;
-      // Also reset the for-my-role panel content so it re-fetches next visit
       const tEl = document.getElementById("pd-tools-result");
       if (tEl) {
         tEl.innerHTML = `<p class="pd-tools-placeholder">Loading recommendations…</p>`;
@@ -744,9 +795,8 @@ function setupPersonalDoom() {
       resultEl.hidden = false;
       enableForMyRoleToggle();
     } catch (err) {
-      errorEl.textContent = err.message || "Generation failed. Try again?";
+      errorEl.textContent = err.message || "Something broke. Try again?";
     } finally {
-      submitBtn.classList.remove("loading");
       submitBtn.disabled = false;
     }
   });
@@ -777,7 +827,7 @@ function renderForMyRoleTools(result, inputs) {
         : ""
     }
     <div class="pd-tools-grid">${cards}</div>
-    <p class="pd-tools-attrib">Picks for <strong>${escapeAttr(inputs.jobTitle)}</strong> · generated by Claude Sonnet 4 · sincere despite the tone.</p>
+    <p class="pd-tools-attrib">Picks for <strong>${escapeAttr(inputs.jobTitle)}</strong> · curated by role nature, not by a model · sincere despite the tone.</p>
   `;
 }
 
@@ -788,14 +838,14 @@ async function ensureForMyRoleTools(inputs) {
     return;
   }
   const resultEl = document.getElementById("pd-tools-result");
-  resultEl.innerHTML = `<p class="pd-tools-placeholder">Generating recommendations for your role…</p>`;
   try {
-    const result = await callWorker("tools", inputs);
+    const data = await loadPersonalDoomData();
+    const result = computeTools(inputs, data);
     forMyRoleToolsResult = result;
     forMyRoleInputsKey = key;
     renderForMyRoleTools(result, inputs);
   } catch (err) {
-    resultEl.innerHTML = `<p class="pd-tools-error">Couldn't generate recommendations: ${escapeAttr(err.message)}</p>`;
+    resultEl.innerHTML = `<p class="pd-tools-error">Couldn't build recommendations: ${escapeAttr(err.message)}</p>`;
   }
 }
 
