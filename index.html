@@ -77,7 +77,8 @@
         <p class="hero-subtitle">Serious stuff, told unseriously.</p>
         <p class="hero-body">
           One page for the latest on frontier LLMs, what they're doing to us, and the tools to learn
-          before they finish learning your job. Refreshed every morning so you don't have to.
+          before they finish learning your job. Refreshed manually every morning by Marcello, our
+          21-year-old computer science intern.<a class="hero-asterisk" href="#marcello-truth" aria-label="About Marcello">*</a>
         </p>
         <p class="hero-body hero-body-coda">
           For developers, managers, and anyone else quietly updating their LinkedIn.
@@ -250,7 +251,7 @@
 
     <section class="quiz-section" id="quiz-section">
       <div class="section-head">
-        <h2 class="section-title">What do I do now?</h2>
+        <h2 class="section-title">What now?</h2>
         <div class="quiz-head-actions">
           <button id="quiz-reset" class="quiz-reset-btn" type="button" hidden>Reset</button>
           <button id="just-show-me" class="cta-just-tell-me" type="button"
@@ -275,11 +276,17 @@
       </div>
 
       <div class="quiz-mode-panel" id="quiz-mode-general">
+        <p class="quiz-subheading">
+          Two questions, one opinionated pick. For when you'd rather not type your job title into a website that has opinions about its survival.
+        </p>
         <div class="quiz-questions" id="quiz-questions"></div>
         <div class="quiz-result" id="quiz-result" aria-live="polite"></div>
       </div>
 
       <div class="quiz-mode-panel" id="quiz-mode-for-my-role" hidden>
+        <p class="quiz-subheading">
+          Picks for the role we just called cooked. Each comes with a "why" line that references your industry — which, for the record, you told us.
+        </p>
         <div class="pd-tools-result" id="pd-tools-result" aria-live="polite">
           <p class="pd-tools-placeholder">Loading recommendations…</p>
         </div>
@@ -289,6 +296,18 @@
 
   <footer class="site-footer">
     <div class="site-footer-inner">
+      <div class="site-footer-truth" id="marcello-truth">
+        <h3 class="site-footer-truth-title">About Marcello</h3>
+        <p class="site-footer-truth-body">
+          <span class="site-footer-truth-mark" aria-hidden="true">*</span> There is no Marcello.
+          He's a Claude Code agent doing the daily refresh while an anxiety-riddled product manager
+          in New Zealand tries to figure out how to stay ahead of the AI disruption this site is
+          busy documenting. The current strategy is "keep building things about it and hope."
+        </p>
+      </div>
+
+      <hr class="site-footer-divider" />
+
       <div class="site-footer-brand">
         <span class="site-footer-logo" aria-hidden="true">
           <svg viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">

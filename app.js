@@ -765,7 +765,7 @@ function setupPersonalDoom() {
     const industry = document.getElementById("pd-industry").value.trim();
 
     if (!jobTitle) {
-      errorEl.textContent = "Job title is required.";
+      errorEl.textContent = "Job title is required, prick.";
       return;
     }
     if (!selectedNature) {
@@ -804,6 +804,14 @@ function setupPersonalDoom() {
   resetBtn?.addEventListener("click", () => {
     resultEl.hidden = true;
     form.hidden = false;
+    document.getElementById("pd-job-title").value = "";
+    document.getElementById("pd-industry").value = "";
+    chips
+      .querySelectorAll(".quiz-chip")
+      .forEach((c) => c.setAttribute("aria-pressed", "false"));
+    selectedNature = null;
+    errorEl.textContent = "";
+    document.getElementById("pd-job-title").focus();
   });
 }
 

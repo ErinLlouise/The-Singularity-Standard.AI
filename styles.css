@@ -65,7 +65,8 @@ html {
 #doom-heading,
 #personal-doom-heading,
 #articles-section,
-#quiz-section {
+#quiz-section,
+#marcello-truth {
   scroll-margin-top: 76px;
 }
 
@@ -1909,6 +1910,47 @@ h1 {
   font-style: italic;
 }
 
+.site-footer-truth {
+  max-width: 560px;
+  text-align: center;
+}
+
+.site-footer-truth-title {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--accent-2);
+  margin: 0 0 8px;
+}
+
+.site-footer-truth-body {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.site-footer-truth-mark {
+  color: var(--accent-2);
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.hero-asterisk {
+  display: inline-block;
+  margin-left: 2px;
+  font-size: 0.8em;
+  color: var(--accent-2);
+  text-decoration: none;
+  vertical-align: super;
+  font-weight: 600;
+}
+
+.hero-asterisk:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 980px) {
   .carousel-prev { left: 8px; }
   .carousel-next { right: 8px; }
@@ -2336,6 +2378,14 @@ h1 {
 
 .quiz-mode-panel[hidden] {
   display: none;
+}
+
+.quiz-subheading {
+  margin: 0 0 16px;
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 720px;
 }
 
 .pd-tools-result {
