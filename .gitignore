@@ -3,3 +3,5 @@ node_modules/
 *.log
 .env
 .claude/settings.local.json
+worker/.dev.vars
+worker/.wrangler/

@@ -11,48 +11,39 @@
     "label": "How f*cked are we?",
     "methodology": "Mean of publicly stated p(doom) estimates from named AI researchers. Definitions of \"doom\" vary by speaker (extinction, catastrophic harm, loss of human control). Personal estimates, not formal forecasts — treat as directional.",
     "experts": [
-      { "name": "Eliezer Yudkowsky", "pDoom": 95, "context": "MIRI co-founder; public statements 2023–2024" },
-      { "name": "Dan Hendrycks", "pDoom": 80, "context": "Director, Center for AI Safety" },
-      { "name": "Yoshua Bengio", "pDoom": 20, "context": "Turing Award laureate; public essays" },
-      { "name": "Dario Amodei", "pDoom": 25, "context": "Anthropic CEO; Axios AI+DC Summit, Sept 2025" },
-      { "name": "Geoffrey Hinton", "pDoom": 15, "context": "Turing Award laureate; The Diary of a CEO podcast, June 2025 — stated '10% to 20% chance' of AI wiping out humanity", "source": "https://www.cnbc.com/2025/06/17/ai-godfather-geoffrey-hinton-theres-a-chance-that-ai-could-displace-humans.html" },
-      { "name": "Yann LeCun", "pDoom": 1, "context": "AMI Labs executive chairman (departed Meta late 2025); calls existential risk estimates 'complete bullshit'; no numeric update found", "source": "https://www.axios.com/2026/05/04/ai-godfather-survival-guide-hype-doom" }
+      {
+        "name": "Eliezer Yudkowsky",
+        "pDoom": 95,
+        "context": "MIRI co-founder; public statements 2023–2024"
+      },
+      {
+        "name": "Dan Hendrycks",
+        "pDoom": 80,
+        "context": "Director, Center for AI Safety"
+      },
+      {
+        "name": "Yoshua Bengio",
+        "pDoom": 20,
+        "context": "Turing Award laureate; public essays"
+      },
+      {
+        "name": "Dario Amodei",
+        "pDoom": 25,
+        "context": "Anthropic CEO; Axios AI+DC Summit, Sept 2025"
+      },
+      {
+        "name": "Geoffrey Hinton",
+        "pDoom": 15,
+        "context": "Turing Award laureate; The Diary of a CEO podcast, June 2025 — stated '10% to 20% chance' of AI wiping out humanity",
+        "source": "https://www.cnbc.com/2025/06/17/ai-godfather-geoffrey-hinton-theres-a-chance-that-ai-could-displace-humans.html"
+      },
+      {
+        "name": "Yann LeCun",
+        "pDoom": 1,
+        "context": "AMI Labs executive chairman (departed Meta late 2025); calls existential risk estimates 'complete bullshit'; no numeric update found",
+        "source": "https://www.axios.com/2026/05/04/ai-godfather-survival-guide-hype-doom"
+      }
     ]
-  },
-  "personalDoom": {
-    "label": "How f*cked are you?",
-    "methodology": "Opinionated estimates of role-specific exposure to AI displacement over the next 2-3 years. Pessimistic and subjective; not career advice. Numbers are vibes, not forecasts.",
-    "question": {
-      "label": "What do you do for a living?",
-      "options": [
-        { "value": "software",   "label": "Software dev" },
-        { "value": "designer",   "label": "Designer" },
-        { "value": "writer",     "label": "Writer / journalist" },
-        { "value": "manager",    "label": "Manager" },
-        { "value": "teacher",    "label": "Teacher" },
-        { "value": "lawyer",     "label": "Lawyer" },
-        { "value": "doctor",     "label": "Doctor / clinician" },
-        { "value": "finance",    "label": "Finance / accounting" },
-        { "value": "sales",      "label": "Sales / marketing" },
-        { "value": "trades",     "label": "Trades / manual" },
-        { "value": "researcher", "label": "Researcher / academic" },
-        { "value": "other",      "label": "Something else" }
-      ]
-    },
-    "matrix": {
-      "software":   { "pDoom": 35, "prediction": "Coding agents will eat 30-50% of routine implementation work in the next 2-3 years. Senior architecture and judgment hold on longer; junior task lists shrink first. Learn to deploy them before you become the deployed." },
-      "designer":   { "pDoom": 25, "prediction": "Mockups, asset generation, and basic UI flows are already automatable. Taste, narrative, brand strategy, and arguing with stakeholders are still yours. Figma is rolling out features that will replace some of you, faster than you'd like." },
-      "writer":     { "pDoom": 55, "prediction": "Marketing copy, summaries, SEO blog posts: cooked. Long-form journalism and original reporting hold on, but volume content roles are evaporating. Your salary is now competing with a $20/month subscription." },
-      "manager":    { "pDoom": 15, "prediction": "Hardest job to replace: coordinating humans, taking blame, navigating politics. You'll be the one deploying AI to replace your reports. Sleep well, if you can." },
-      "teacher":    { "pDoom": 40, "prediction": "Routine tutoring, grading, and lesson prep will be AI-assisted within a year. In-person presence, mentorship, and credentialing keep you employed. K-12 safer than higher ed — universities are the most exposed." },
-      "lawyer":     { "pDoom": 50, "prediction": "Document review, contract drafting, and discovery are already going. Courtroom presence, negotiation, and partnership relationships survive. Big Law associates are quietly stressed." },
-      "doctor":     { "pDoom": 10, "prediction": "Liability, licensing, and bedside presence keep humans in the loop for years. Radiology and pathology are most exposed; primary care relatively safe. Your malpractice insurer is your moat." },
-      "finance":    { "pDoom": 55, "prediction": "Bookkeeping, audit, FP&A: already on the chopping block. Complex deals and strategy survive longer. The Big Four are restructuring around this — read the room." },
-      "sales":      { "pDoom": 45, "prediction": "Outreach, CRM enrichment, and routine copy are automated. Relationship-driven enterprise sales survives; high-volume SDR roles shrink fast. Become the closer or become the bot." },
-      "trades":     { "pDoom": 5,  "prediction": "AI doesn't fix toilets. Plumbing, electrical, construction, eldercare — humans needed for the foreseeable future. The most pessimistic forecasts still need bodies for physical labor. You're fine. Probably." },
-      "researcher": { "pDoom": 40, "prediction": "AI now reads and synthesizes literature faster than you. Novel hypothesis generation and peer review still need humans. Grant pressure and publish-or-perish intensify; the floor for 'novel' is rising." },
-      "other":      { "pDoom": 35, "prediction": "Without specifics, this is a guess. Rule of thumb: how much of your work is producing standard text, code, or analysis versus judgment, physical presence, or relationships? Lean toward the latter and you're probably fine." }
-    }
   },
   "articlesOverview": "The frontier reasoning tier now spans a 24-point range on GPQA Diamond — Gemini 3.1 Pro (94.3%), Opus 4.7 (94.2%), and GPT-5.5 (93.6%) cluster at the top, while Grok 4.3 posts 90.1% and Llama 4 Maverick trails at 69.8%. On coding, GPT-5.5 and Opus 4.7 remain co-leaders at 88.7% and 87.6% SWE-bench Verified; Google answered with Gemini 3.5 Flash (May 2026) targeting agentic tasks, with 3.5 Pro still months away.",
   "articles": [
@@ -93,187 +84,749 @@
         "id": "intent",
         "label": "What are you trying to do?",
         "options": [
-          { "value": "code", "label": "Write code" },
-          { "value": "write", "label": "Write prose" },
-          { "value": "research", "label": "Research" },
-          { "value": "image", "label": "Make images" },
-          { "value": "audio", "label": "Voice / audio" },
-          { "value": "chat", "label": "Just chat" }
+          {
+            "value": "code",
+            "label": "Write code"
+          },
+          {
+            "value": "write",
+            "label": "Write prose"
+          },
+          {
+            "value": "research",
+            "label": "Research"
+          },
+          {
+            "value": "image",
+            "label": "Make images"
+          },
+          {
+            "value": "audio",
+            "label": "Voice / audio"
+          },
+          {
+            "value": "chat",
+            "label": "Just chat"
+          }
         ]
       },
       {
         "id": "priority",
         "label": "What matters most?",
         "options": [
-          { "value": "quality", "label": "Quality" },
-          { "value": "speed", "label": "Speed" },
-          { "value": "cost", "label": "Cost" },
-          { "value": "integration", "label": "Fits my workflow" }
+          {
+            "value": "quality",
+            "label": "Quality"
+          },
+          {
+            "value": "speed",
+            "label": "Speed"
+          },
+          {
+            "value": "cost",
+            "label": "Cost"
+          },
+          {
+            "value": "integration",
+            "label": "Fits my workflow"
+          }
         ]
       }
     ],
     "matrix": {
-      "code|quality":     { "name": "Claude",          "why": "Strong reasoning and nuance on code review, refactors, and architecture.", "url": "https://claude.ai/" },
-      "code|speed":       { "name": "ChatGPT",         "why": "Fast turnaround on broad code questions with a huge feature surface.",     "url": "https://chat.openai.com/" },
-      "code|cost":        { "name": "GitHub Copilot",  "why": "$10/mo flat for autocomplete inside the editor you already use.",          "url": "https://github.com/features/copilot" },
-      "code|integration": { "name": "Cursor",          "why": "AI-native VS Code fork so your shortcuts and extensions still work.",      "url": "https://www.cursor.com/" },
-
-      "write|quality":     { "name": "Claude",      "why": "Best at nuanced prose, careful editing, and matching a voice.",   "url": "https://claude.ai/" },
-      "write|speed":       { "name": "ChatGPT",     "why": "Fastest path from blank page to draft.",                          "url": "https://chat.openai.com/" },
-      "write|cost":        { "name": "ChatGPT free","why": "Free tier handles most general prose tasks.",                     "url": "https://chat.openai.com/" },
-      "write|integration": { "name": "Notion AI",   "why": "Inline writing inside the doc you're already in.",                "url": "https://www.notion.so/product/ai" },
-
-      "research|quality":     { "name": "Perplexity Pro", "why": "Citations-first with deeper reasoning models behind it.",          "url": "https://www.perplexity.ai/" },
-      "research|speed":       { "name": "Perplexity",     "why": "Cited answers in seconds; perfect for quick fact-checks.",         "url": "https://www.perplexity.ai/" },
-      "research|cost":        { "name": "Perplexity",     "why": "Generous free tier with sources included.",                       "url": "https://www.perplexity.ai/" },
-      "research|integration": { "name": "NotebookLM",     "why": "Grounds answers in documents you upload, keeps it offline-ish.",  "url": "https://notebooklm.google/" },
-
-      "image|quality":     { "name": "Midjourney",    "why": "Strongest aesthetic quality and style control on the market.",      "url": "https://www.midjourney.com/" },
-      "image|speed":       { "name": "DALL-E 3",      "why": "Generates inside ChatGPT in seconds with minimal prompting.",       "url": "https://openai.com/dall-e-3" },
-      "image|cost":        { "name": "DALL-E 3",      "why": "Included with ChatGPT Plus; no separate subscription.",             "url": "https://openai.com/dall-e-3" },
-      "image|integration": { "name": "Adobe Firefly", "why": "Lives inside Photoshop and the rest of Creative Cloud.",            "url": "https://www.adobe.com/products/firefly.html" },
-
-      "audio|quality":     { "name": "ElevenLabs", "why": "Top-tier voice cloning and TTS — hard to beat for natural speech.", "url": "https://elevenlabs.io/" },
-      "audio|speed":       { "name": "ElevenLabs", "why": "Real-time TTS API with low latency.",                                "url": "https://elevenlabs.io/" },
-      "audio|cost":        { "name": "Whisper",    "why": "OpenAI's open-source STT; free to self-host.",                       "url": "https://openai.com/research/whisper" },
-      "audio|integration": { "name": "ElevenLabs", "why": "Mature SDKs and integrations across most stacks.",                   "url": "https://elevenlabs.io/" },
-
-      "chat|quality":     { "name": "Claude",   "why": "Thoughtful, less sycophantic, handles long conversations well.",      "url": "https://claude.ai/" },
-      "chat|speed":       { "name": "ChatGPT",  "why": "Fastest UX with memory, voice mode, and the broadest tool surface.",  "url": "https://chat.openai.com/" },
-      "chat|cost":        { "name": "Claude free", "why": "Generous free tier; no credit card to start.",                     "url": "https://claude.ai/" },
-      "chat|integration": { "name": "Gemini",   "why": "Tight integration with Google Workspace (Gmail, Docs, Drive).",       "url": "https://gemini.google.com/" }
+      "code|quality": {
+        "name": "Claude",
+        "why": "Strong reasoning and nuance on code review, refactors, and architecture.",
+        "url": "https://claude.ai/"
+      },
+      "code|speed": {
+        "name": "ChatGPT",
+        "why": "Fast turnaround on broad code questions with a huge feature surface.",
+        "url": "https://chat.openai.com/"
+      },
+      "code|cost": {
+        "name": "GitHub Copilot",
+        "why": "$10/mo flat for autocomplete inside the editor you already use.",
+        "url": "https://github.com/features/copilot"
+      },
+      "code|integration": {
+        "name": "Cursor",
+        "why": "AI-native VS Code fork so your shortcuts and extensions still work.",
+        "url": "https://www.cursor.com/"
+      },
+      "write|quality": {
+        "name": "Claude",
+        "why": "Best at nuanced prose, careful editing, and matching a voice.",
+        "url": "https://claude.ai/"
+      },
+      "write|speed": {
+        "name": "ChatGPT",
+        "why": "Fastest path from blank page to draft.",
+        "url": "https://chat.openai.com/"
+      },
+      "write|cost": {
+        "name": "ChatGPT free",
+        "why": "Free tier handles most general prose tasks.",
+        "url": "https://chat.openai.com/"
+      },
+      "write|integration": {
+        "name": "Notion AI",
+        "why": "Inline writing inside the doc you're already in.",
+        "url": "https://www.notion.so/product/ai"
+      },
+      "research|quality": {
+        "name": "Perplexity Pro",
+        "why": "Citations-first with deeper reasoning models behind it.",
+        "url": "https://www.perplexity.ai/"
+      },
+      "research|speed": {
+        "name": "Perplexity",
+        "why": "Cited answers in seconds; perfect for quick fact-checks.",
+        "url": "https://www.perplexity.ai/"
+      },
+      "research|cost": {
+        "name": "Perplexity",
+        "why": "Generous free tier with sources included.",
+        "url": "https://www.perplexity.ai/"
+      },
+      "research|integration": {
+        "name": "NotebookLM",
+        "why": "Grounds answers in documents you upload, keeps it offline-ish.",
+        "url": "https://notebooklm.google/"
+      },
+      "image|quality": {
+        "name": "Midjourney",
+        "why": "Strongest aesthetic quality and style control on the market.",
+        "url": "https://www.midjourney.com/"
+      },
+      "image|speed": {
+        "name": "DALL-E 3",
+        "why": "Generates inside ChatGPT in seconds with minimal prompting.",
+        "url": "https://openai.com/dall-e-3"
+      },
+      "image|cost": {
+        "name": "DALL-E 3",
+        "why": "Included with ChatGPT Plus; no separate subscription.",
+        "url": "https://openai.com/dall-e-3"
+      },
+      "image|integration": {
+        "name": "Adobe Firefly",
+        "why": "Lives inside Photoshop and the rest of Creative Cloud.",
+        "url": "https://www.adobe.com/products/firefly.html"
+      },
+      "audio|quality": {
+        "name": "ElevenLabs",
+        "why": "Top-tier voice cloning and TTS — hard to beat for natural speech.",
+        "url": "https://elevenlabs.io/"
+      },
+      "audio|speed": {
+        "name": "ElevenLabs",
+        "why": "Real-time TTS API with low latency.",
+        "url": "https://elevenlabs.io/"
+      },
+      "audio|cost": {
+        "name": "Whisper",
+        "why": "OpenAI's open-source STT; free to self-host.",
+        "url": "https://openai.com/research/whisper"
+      },
+      "audio|integration": {
+        "name": "ElevenLabs",
+        "why": "Mature SDKs and integrations across most stacks.",
+        "url": "https://elevenlabs.io/"
+      },
+      "chat|quality": {
+        "name": "Claude",
+        "why": "Thoughtful, less sycophantic, handles long conversations well.",
+        "url": "https://claude.ai/"
+      },
+      "chat|speed": {
+        "name": "ChatGPT",
+        "why": "Fastest UX with memory, voice mode, and the broadest tool surface.",
+        "url": "https://chat.openai.com/"
+      },
+      "chat|cost": {
+        "name": "Claude free",
+        "why": "Generous free tier; no credit card to start.",
+        "url": "https://claude.ai/"
+      },
+      "chat|integration": {
+        "name": "Gemini",
+        "why": "Tight integration with Google Workspace (Gmail, Docs, Drive).",
+        "url": "https://gemini.google.com/"
+      }
     }
   },
   "benchmarks": [
-    { "id": "mmlu", "label": "MMLU", "description": "Multitask knowledge across 57 subjects" },
-    { "id": "gpqa", "label": "GPQA Diamond", "description": "Graduate-level science questions" },
-    { "id": "swebench", "label": "SWE-bench Verified", "description": "Real-world software engineering tasks" },
-    { "id": "arcagi", "label": "ARC-AGI-1", "description": "Abstract reasoning, novel puzzles (original 2019 public eval; distinct from ARC-AGI-2/3)" }
+    {
+      "id": "mmlu",
+      "label": "MMLU",
+      "description": "Multitask knowledge across 57 subjects"
+    },
+    {
+      "id": "gpqa",
+      "label": "GPQA Diamond",
+      "description": "Graduate-level science questions"
+    },
+    {
+      "id": "swebench",
+      "label": "SWE-bench Verified",
+      "description": "Real-world software engineering tasks"
+    },
+    {
+      "id": "arcagi",
+      "label": "ARC-AGI-1",
+      "description": "Abstract reasoning, novel puzzles (original 2019 public eval; distinct from ARC-AGI-2/3)"
+    }
   ],
   "companies": [
     {
       "name": "OpenAI",
       "model": "GPT-5.5",
-      "scores": { "mmlu": 92.4, "gpqa": 93.6, "swebench": 88.7, "arcagi": null },
+      "scores": {
+        "mmlu": 92.4,
+        "gpqa": 93.6,
+        "swebench": 88.7,
+        "arcagi": null
+      },
       "source": "https://openai.com/index/introducing-gpt-5-5/",
       "lastVerified": "2026-05-22",
       "arenaModels": [
-        { "name": "gpt-5.5-high", "elo": 1481, "margin": 6, "rank": 8 },
-        { "name": "gpt-5.4-high", "elo": 1480, "margin": 5, "rank": 10 },
-        { "name": "gpt-5.5", "elo": 1478, "margin": 6, "rank": 11 },
-        { "name": "gpt-5.2-chat-latest-20260210", "elo": 1477, "margin": 4, "rank": 13 },
-        { "name": "gpt-5.5-instant", "elo": 1472, "margin": 6, "rank": 21 },
-        { "name": "gpt-5.4", "elo": 1467, "margin": 5, "rank": 24 },
-        { "name": "gpt-5.1-high", "elo": 1455, "margin": 4, "rank": 36 },
-        { "name": "gpt-5.4-mini-high", "elo": 1454, "margin": 5, "rank": 39 },
-        { "name": "gpt-5.3-chat-latest", "elo": 1449, "margin": 5, "rank": 45 },
-        { "name": "gpt-4.5-preview-2025-02-27", "elo": 1444, "margin": 6, "rank": 51 },
-        { "name": "chatgpt-4o-latest-20250326", "elo": 1443, "margin": 3, "rank": 53 },
-        { "name": "gpt-5.2-high", "elo": 1439, "margin": 4, "rank": 56 },
-        { "name": "gpt-5.1", "elo": 1439, "margin": 4, "rank": 57 },
-        { "name": "gpt-5.2", "elo": 1436, "margin": 4, "rank": 60 },
-        { "name": "gpt-5-high", "elo": 1434, "margin": 5, "rank": 63 },
-        { "name": "o3-2025-04-16", "elo": 1431, "margin": 4, "rank": 67 },
-        { "name": "gpt-5-chat", "elo": 1427, "margin": 4, "rank": 71 },
-        { "name": "gpt-4.1-2025-04-14", "elo": 1413, "margin": 4, "rank": 94 },
-        { "name": "gpt-5.4-nano-high", "elo": 1406, "margin": 5, "rank": 104 },
-        { "name": "o1-2024-12-17", "elo": 1402, "margin": 4, "rank": 109 },
-        { "name": "gpt-5-mini-high", "elo": 1390, "margin": 5, "rank": 124 },
-        { "name": "o4-mini-2025-04-16", "elo": 1390, "margin": 4, "rank": 125 },
-        { "name": "o1-preview", "elo": 1388, "margin": 5, "rank": 127 },
-        { "name": "gpt-4.1-mini-2025-04-14", "elo": 1382, "margin": 4, "rank": 135 },
-        { "name": "o3-mini-high", "elo": 1363, "margin": 5, "rank": 152 },
-        { "name": "gpt-oss-120b", "elo": 1353, "margin": 4, "rank": 163 },
-        { "name": "o3-mini", "elo": 1347, "margin": 4, "rank": 169 },
-        { "name": "gpt-4o-2024-05-13", "elo": 1345, "margin": 3, "rank": 176 }
+        {
+          "name": "gpt-5.5-high",
+          "elo": 1481,
+          "margin": 6,
+          "rank": 8
+        },
+        {
+          "name": "gpt-5.4-high",
+          "elo": 1480,
+          "margin": 5,
+          "rank": 10
+        },
+        {
+          "name": "gpt-5.5",
+          "elo": 1478,
+          "margin": 6,
+          "rank": 11
+        },
+        {
+          "name": "gpt-5.2-chat-latest-20260210",
+          "elo": 1477,
+          "margin": 4,
+          "rank": 13
+        },
+        {
+          "name": "gpt-5.5-instant",
+          "elo": 1472,
+          "margin": 6,
+          "rank": 21
+        },
+        {
+          "name": "gpt-5.4",
+          "elo": 1467,
+          "margin": 5,
+          "rank": 24
+        },
+        {
+          "name": "gpt-5.1-high",
+          "elo": 1455,
+          "margin": 4,
+          "rank": 36
+        },
+        {
+          "name": "gpt-5.4-mini-high",
+          "elo": 1454,
+          "margin": 5,
+          "rank": 39
+        },
+        {
+          "name": "gpt-5.3-chat-latest",
+          "elo": 1449,
+          "margin": 5,
+          "rank": 45
+        },
+        {
+          "name": "gpt-4.5-preview-2025-02-27",
+          "elo": 1444,
+          "margin": 6,
+          "rank": 51
+        },
+        {
+          "name": "chatgpt-4o-latest-20250326",
+          "elo": 1443,
+          "margin": 3,
+          "rank": 53
+        },
+        {
+          "name": "gpt-5.2-high",
+          "elo": 1439,
+          "margin": 4,
+          "rank": 56
+        },
+        {
+          "name": "gpt-5.1",
+          "elo": 1439,
+          "margin": 4,
+          "rank": 57
+        },
+        {
+          "name": "gpt-5.2",
+          "elo": 1436,
+          "margin": 4,
+          "rank": 60
+        },
+        {
+          "name": "gpt-5-high",
+          "elo": 1434,
+          "margin": 5,
+          "rank": 63
+        },
+        {
+          "name": "o3-2025-04-16",
+          "elo": 1431,
+          "margin": 4,
+          "rank": 67
+        },
+        {
+          "name": "gpt-5-chat",
+          "elo": 1427,
+          "margin": 4,
+          "rank": 71
+        },
+        {
+          "name": "gpt-4.1-2025-04-14",
+          "elo": 1413,
+          "margin": 4,
+          "rank": 94
+        },
+        {
+          "name": "gpt-5.4-nano-high",
+          "elo": 1406,
+          "margin": 5,
+          "rank": 104
+        },
+        {
+          "name": "o1-2024-12-17",
+          "elo": 1402,
+          "margin": 4,
+          "rank": 109
+        },
+        {
+          "name": "gpt-5-mini-high",
+          "elo": 1390,
+          "margin": 5,
+          "rank": 124
+        },
+        {
+          "name": "o4-mini-2025-04-16",
+          "elo": 1390,
+          "margin": 4,
+          "rank": 125
+        },
+        {
+          "name": "o1-preview",
+          "elo": 1388,
+          "margin": 5,
+          "rank": 127
+        },
+        {
+          "name": "gpt-4.1-mini-2025-04-14",
+          "elo": 1382,
+          "margin": 4,
+          "rank": 135
+        },
+        {
+          "name": "o3-mini-high",
+          "elo": 1363,
+          "margin": 5,
+          "rank": 152
+        },
+        {
+          "name": "gpt-oss-120b",
+          "elo": 1353,
+          "margin": 4,
+          "rank": 163
+        },
+        {
+          "name": "o3-mini",
+          "elo": 1347,
+          "margin": 4,
+          "rank": 169
+        },
+        {
+          "name": "gpt-4o-2024-05-13",
+          "elo": 1345,
+          "margin": 3,
+          "rank": 176
+        }
       ]
     },
     {
       "name": "Anthropic",
       "model": "Claude Opus 4.7",
-      "scores": { "mmlu": null, "gpqa": 94.2, "swebench": 87.6, "arcagi": null },
+      "scores": {
+        "mmlu": null,
+        "gpqa": 94.2,
+        "swebench": 87.6,
+        "arcagi": null
+      },
       "source": "https://www.anthropic.com/news/claude-opus-4-7",
       "lastVerified": "2026-05-22",
       "arenaModels": [
-        { "name": "claude-opus-4-6-thinking", "elo": 1502, "margin": 4, "rank": 1 },
-        { "name": "claude-opus-4-7-thinking", "elo": 1500, "margin": 6, "rank": 2 },
-        { "name": "claude-opus-4-6", "elo": 1498, "margin": 4, "rank": 3 },
-        { "name": "claude-opus-4-7", "elo": 1492, "margin": 6, "rank": 4 },
-        { "name": "claude-opus-4-5-20251101-thinking-32k", "elo": 1473, "margin": 4, "rank": 19 },
-        { "name": "claude-sonnet-4-6", "elo": 1468, "margin": 5, "rank": 22 },
-        { "name": "claude-opus-4-5-20251101", "elo": 1468, "margin": 3, "rank": 23 },
-        { "name": "claude-sonnet-4-5-20250929-thinking-32k", "elo": 1454, "margin": 3, "rank": 37 },
-        { "name": "claude-sonnet-4-5-20250929", "elo": 1454, "margin": 3, "rank": 38 },
-        { "name": "claude-opus-4-1-20250805-thinking-16k", "elo": 1449, "margin": 3, "rank": 46 },
-        { "name": "claude-opus-4-1-20250805", "elo": 1447, "margin": 3, "rank": 48 },
-        { "name": "claude-opus-4-20250514-thinking-16k", "elo": 1424, "margin": 4, "rank": 75 },
-        { "name": "claude-opus-4-20250514", "elo": 1412, "margin": 4, "rank": 95 },
-        { "name": "claude-haiku-4-5-20251001", "elo": 1410, "margin": 3, "rank": 99 },
-        { "name": "claude-sonnet-4-20250514-thinking-32k", "elo": 1399, "margin": 4, "rank": 112 },
-        { "name": "claude-sonnet-4-20250514", "elo": 1389, "margin": 4, "rank": 126 },
-        { "name": "claude-3-7-sonnet-20250219-thinking-32k", "elo": 1387, "margin": 4, "rank": 131 },
-        { "name": "claude-3-5-sonnet-20241022", "elo": 1372, "margin": 3, "rank": 145 },
-        { "name": "claude-3-7-sonnet-20250219", "elo": 1371, "margin": 4, "rank": 146 },
-        { "name": "claude-3-5-sonnet-20240620", "elo": 1342, "margin": 3, "rank": 179 }
+        {
+          "name": "claude-opus-4-6-thinking",
+          "elo": 1502,
+          "margin": 4,
+          "rank": 1
+        },
+        {
+          "name": "claude-opus-4-7-thinking",
+          "elo": 1500,
+          "margin": 6,
+          "rank": 2
+        },
+        {
+          "name": "claude-opus-4-6",
+          "elo": 1498,
+          "margin": 4,
+          "rank": 3
+        },
+        {
+          "name": "claude-opus-4-7",
+          "elo": 1492,
+          "margin": 6,
+          "rank": 4
+        },
+        {
+          "name": "claude-opus-4-5-20251101-thinking-32k",
+          "elo": 1473,
+          "margin": 4,
+          "rank": 19
+        },
+        {
+          "name": "claude-sonnet-4-6",
+          "elo": 1468,
+          "margin": 5,
+          "rank": 22
+        },
+        {
+          "name": "claude-opus-4-5-20251101",
+          "elo": 1468,
+          "margin": 3,
+          "rank": 23
+        },
+        {
+          "name": "claude-sonnet-4-5-20250929-thinking-32k",
+          "elo": 1454,
+          "margin": 3,
+          "rank": 37
+        },
+        {
+          "name": "claude-sonnet-4-5-20250929",
+          "elo": 1454,
+          "margin": 3,
+          "rank": 38
+        },
+        {
+          "name": "claude-opus-4-1-20250805-thinking-16k",
+          "elo": 1449,
+          "margin": 3,
+          "rank": 46
+        },
+        {
+          "name": "claude-opus-4-1-20250805",
+          "elo": 1447,
+          "margin": 3,
+          "rank": 48
+        },
+        {
+          "name": "claude-opus-4-20250514-thinking-16k",
+          "elo": 1424,
+          "margin": 4,
+          "rank": 75
+        },
+        {
+          "name": "claude-opus-4-20250514",
+          "elo": 1412,
+          "margin": 4,
+          "rank": 95
+        },
+        {
+          "name": "claude-haiku-4-5-20251001",
+          "elo": 1410,
+          "margin": 3,
+          "rank": 99
+        },
+        {
+          "name": "claude-sonnet-4-20250514-thinking-32k",
+          "elo": 1399,
+          "margin": 4,
+          "rank": 112
+        },
+        {
+          "name": "claude-sonnet-4-20250514",
+          "elo": 1389,
+          "margin": 4,
+          "rank": 126
+        },
+        {
+          "name": "claude-3-7-sonnet-20250219-thinking-32k",
+          "elo": 1387,
+          "margin": 4,
+          "rank": 131
+        },
+        {
+          "name": "claude-3-5-sonnet-20241022",
+          "elo": 1372,
+          "margin": 3,
+          "rank": 145
+        },
+        {
+          "name": "claude-3-7-sonnet-20250219",
+          "elo": 1371,
+          "margin": 4,
+          "rank": 146
+        },
+        {
+          "name": "claude-3-5-sonnet-20240620",
+          "elo": 1342,
+          "margin": 3,
+          "rank": 179
+        }
       ]
     },
     {
       "name": "Google DeepMind",
       "model": "Gemini 3.1 Pro",
-      "scores": { "mmlu": null, "gpqa": 94.3, "swebench": 80.6, "arcagi": null },
+      "scores": {
+        "mmlu": null,
+        "gpqa": 94.3,
+        "swebench": 80.6,
+        "arcagi": null
+      },
       "source": "https://deepmind.google/models/model-cards/gemini-3-1-pro/",
       "lastVerified": "2026-05-22",
       "arenaModels": [
-        { "name": "gemini-3.1-pro-preview", "elo": 1488, "margin": 4, "rank": 6 },
-        { "name": "gemini-3-pro", "elo": 1486, "margin": 4, "rank": 7 },
-        { "name": "gemini-3.5-flash", "elo": 1480, "margin": 8, "rank": 9 },
-        { "name": "gemini-3-flash", "elo": 1473, "margin": 4, "rank": 17 },
-        { "name": "gemini-3-flash (thinking-minimal)", "elo": 1463, "margin": 4, "rank": 28 },
-        { "name": "gemma-4-31b", "elo": 1451, "margin": 8, "rank": 40 },
-        { "name": "gemini-2.5-pro", "elo": 1446, "margin": 3, "rank": 49 },
-        { "name": "gemma-4-26b-a4b", "elo": 1438, "margin": 8, "rank": 58 },
-        { "name": "gemini-3.1-flash-lite-preview", "elo": 1436, "margin": 4, "rank": 59 },
-        { "name": "gemini-2.5-flash", "elo": 1411, "margin": 3, "rank": 98 },
-        { "name": "gemini-2.5-flash-preview-09-2025", "elo": 1405, "margin": 4, "rank": 105 },
-        { "name": "gemini-2.5-flash-lite-preview-09-2025-no-thinking", "elo": 1380, "margin": 3, "rank": 137 },
-        { "name": "gemini-2.5-flash-lite-preview-06-17-thinking", "elo": 1375, "margin": 5, "rank": 141 },
-        { "name": "gemma-3-27b-it", "elo": 1366, "margin": 4, "rank": 150 },
-        { "name": "gemini-2.0-flash-001", "elo": 1360, "margin": 4, "rank": 155 },
-        { "name": "gemini-2.0-flash-lite-preview-02-05", "elo": 1353, "margin": 4, "rank": 162 },
-        { "name": "gemini-1.5-pro-002", "elo": 1351, "margin": 3, "rank": 164 },
-        { "name": "gemma-3-12b-it", "elo": 1342, "margin": 10, "rank": 180 }
+        {
+          "name": "gemini-3.1-pro-preview",
+          "elo": 1488,
+          "margin": 4,
+          "rank": 6
+        },
+        {
+          "name": "gemini-3-pro",
+          "elo": 1486,
+          "margin": 4,
+          "rank": 7
+        },
+        {
+          "name": "gemini-3.5-flash",
+          "elo": 1480,
+          "margin": 8,
+          "rank": 9
+        },
+        {
+          "name": "gemini-3-flash",
+          "elo": 1473,
+          "margin": 4,
+          "rank": 17
+        },
+        {
+          "name": "gemini-3-flash (thinking-minimal)",
+          "elo": 1463,
+          "margin": 4,
+          "rank": 28
+        },
+        {
+          "name": "gemma-4-31b",
+          "elo": 1451,
+          "margin": 8,
+          "rank": 40
+        },
+        {
+          "name": "gemini-2.5-pro",
+          "elo": 1446,
+          "margin": 3,
+          "rank": 49
+        },
+        {
+          "name": "gemma-4-26b-a4b",
+          "elo": 1438,
+          "margin": 8,
+          "rank": 58
+        },
+        {
+          "name": "gemini-3.1-flash-lite-preview",
+          "elo": 1436,
+          "margin": 4,
+          "rank": 59
+        },
+        {
+          "name": "gemini-2.5-flash",
+          "elo": 1411,
+          "margin": 3,
+          "rank": 98
+        },
+        {
+          "name": "gemini-2.5-flash-preview-09-2025",
+          "elo": 1405,
+          "margin": 4,
+          "rank": 105
+        },
+        {
+          "name": "gemini-2.5-flash-lite-preview-09-2025-no-thinking",
+          "elo": 1380,
+          "margin": 3,
+          "rank": 137
+        },
+        {
+          "name": "gemini-2.5-flash-lite-preview-06-17-thinking",
+          "elo": 1375,
+          "margin": 5,
+          "rank": 141
+        },
+        {
+          "name": "gemma-3-27b-it",
+          "elo": 1366,
+          "margin": 4,
+          "rank": 150
+        },
+        {
+          "name": "gemini-2.0-flash-001",
+          "elo": 1360,
+          "margin": 4,
+          "rank": 155
+        },
+        {
+          "name": "gemini-2.0-flash-lite-preview-02-05",
+          "elo": 1353,
+          "margin": 4,
+          "rank": 162
+        },
+        {
+          "name": "gemini-1.5-pro-002",
+          "elo": 1351,
+          "margin": 3,
+          "rank": 164
+        },
+        {
+          "name": "gemma-3-12b-it",
+          "elo": 1342,
+          "margin": 10,
+          "rank": 180
+        }
       ]
     },
     {
       "name": "Meta",
       "model": "Llama 4 Maverick",
-      "scores": { "mmlu": null, "gpqa": 69.8, "swebench": null, "arcagi": null },
+      "scores": {
+        "mmlu": null,
+        "gpqa": 69.8,
+        "swebench": null,
+        "arcagi": null
+      },
       "source": "https://www.llama.com/models/llama-4/",
       "lastVerified": "2026-05-22",
       "arenaModels": [
-        { "name": "muse-spark", "elo": 1489, "margin": 6, "rank": 5 }
+        {
+          "name": "muse-spark",
+          "elo": 1489,
+          "margin": 6,
+          "rank": 5
+        }
       ]
     },
     {
       "name": "xAI",
       "model": "Grok 4.3",
-      "scores": { "mmlu": null, "gpqa": 90.1, "swebench": null, "arcagi": null },
+      "scores": {
+        "mmlu": null,
+        "gpqa": 90.1,
+        "swebench": null,
+        "arcagi": null
+      },
       "source": "https://designforonline.com/ai-models/xai-grok-4-3/",
       "lastVerified": "2026-05-22",
       "arenaModels": [
-        { "name": "grok-4.20-beta1", "elo": 1478, "margin": 5, "rank": 12 },
-        { "name": "grok-4.20-beta-0309-reasoning", "elo": 1475, "margin": 5, "rank": 15 },
-        { "name": "grok-4.20-multi-agent-beta-0309", "elo": 1474, "margin": 5, "rank": 16 },
-        { "name": "grok-4.1-thinking", "elo": 1467, "margin": 3, "rank": 25 },
-        { "name": "grok-4.1", "elo": 1460, "margin": 3, "rank": 31 },
-        { "name": "grok-4.3", "elo": 1451, "margin": 6, "rank": 41 },
-        { "name": "grok-4-1-fast-reasoning", "elo": 1431, "margin": 3, "rank": 66 },
-        { "name": "grok-4-fast-chat", "elo": 1421, "margin": 8, "rank": 81 },
-        { "name": "grok-3-preview-02-24", "elo": 1412, "margin": 4, "rank": 96 },
-        { "name": "grok-4-0709", "elo": 1410, "margin": 4, "rank": 100 },
-        { "name": "grok-4-fast-reasoning", "elo": 1404, "margin": 5, "rank": 106 },
-        { "name": "grok-3-mini-high", "elo": 1362, "margin": 5, "rank": 153 },
-        { "name": "grok-3-mini-beta", "elo": 1357, "margin": 5, "rank": 158 }
+        {
+          "name": "grok-4.20-beta1",
+          "elo": 1478,
+          "margin": 5,
+          "rank": 12
+        },
+        {
+          "name": "grok-4.20-beta-0309-reasoning",
+          "elo": 1475,
+          "margin": 5,
+          "rank": 15
+        },
+        {
+          "name": "grok-4.20-multi-agent-beta-0309",
+          "elo": 1474,
+          "margin": 5,
+          "rank": 16
+        },
+        {
+          "name": "grok-4.1-thinking",
+          "elo": 1467,
+          "margin": 3,
+          "rank": 25
+        },
+        {
+          "name": "grok-4.1",
+          "elo": 1460,
+          "margin": 3,
+          "rank": 31
+        },
+        {
+          "name": "grok-4.3",
+          "elo": 1451,
+          "margin": 6,
+          "rank": 41
+        },
+        {
+          "name": "grok-4-1-fast-reasoning",
+          "elo": 1431,
+          "margin": 3,
+          "rank": 66
+        },
+        {
+          "name": "grok-4-fast-chat",
+          "elo": 1421,
+          "margin": 8,
+          "rank": 81
+        },
+        {
+          "name": "grok-3-preview-02-24",
+          "elo": 1412,
+          "margin": 4,
+          "rank": 96
+        },
+        {
+          "name": "grok-4-0709",
+          "elo": 1410,
+          "margin": 4,
+          "rank": 100
+        },
+        {
+          "name": "grok-4-fast-reasoning",
+          "elo": 1404,
+          "margin": 5,
+          "rank": 106
+        },
+        {
+          "name": "grok-3-mini-high",
+          "elo": 1362,
+          "margin": 5,
+          "rank": 153
+        },
+        {
+          "name": "grok-3-mini-beta",
+          "elo": 1357,
+          "margin": 5,
+          "rank": 158
+        }
       ]
     }
   ]

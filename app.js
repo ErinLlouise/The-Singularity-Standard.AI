@@ -376,7 +376,6 @@ async function refresh() {
     cachedLeaderboard = leaderboard;
     renderUpdated(data.lastUpdated);
     renderDoomMeter(data.doomMeter);
-    renderPersonalDoom(data.personalDoom);
     renderLeaderboard(data, leaderboard);
     renderArticles(data.articles);
     renderQuiz(data.toolQuiz);
@@ -599,76 +598,232 @@ function setupOverview() {
 
 const quizState = {};
 let quizWired = false;
-let personalDoomWired = false;
 
-function renderPersonalDoom(personal) {
-  const questionEl = document.getElementById("personal-doom-question");
-  const resultEl = document.getElementById("personal-doom-result");
-  const meterEl = document.getElementById("personal-doom-meter");
-  const predictionEl = document.getElementById("personal-doom-prediction");
-  const methodologyEl = document.getElementById("personal-doom-methodology");
-  const headingEl = document.getElementById("personal-doom-heading");
-  if (!questionEl) return;
-  if (!personal || !personal.question || !Array.isArray(personal.question.options)) {
-    questionEl.innerHTML = `<div class="empty-state">Add a <code>personalDoom</code> block to data.json.</div>`;
-    return;
+// ─── Section 1 + 2: AI-driven personal doom & tools (via Cloudflare Worker) ──
+
+let personalDoomFormWired = false;
+let personalDoomInputs = null;        // { jobTitle, industry, roleNature }
+let personalDoomResult = null;        // doom API response
+let forMyRoleToolsResult = null;      // tools API response (cached)
+let forMyRoleInputsKey = null;        // serialized inputs for cache invalidation
+
+function getWorkerUrl() {
+  return (window.DEADLY_SERIOUS_CONFIG && window.DEADLY_SERIOUS_CONFIG.workerUrl) || "";
+}
+
+async function callWorker(action, payload) {
+  const url = getWorkerUrl();
+  if (!url) {
+    throw new Error(
+      "AI verdicts aren't configured yet. Deploy the Cloudflare Worker and paste its URL into config.js — see worker/README.md."
+    );
   }
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action, ...payload }),
+  });
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {}
+  if (!res.ok) {
+    throw new Error(data.error || `Worker returned HTTP ${res.status}`);
+  }
+  return data;
+}
 
-  if (headingEl && personal.label) headingEl.textContent = personal.label;
-  if (methodologyEl) methodologyEl.textContent = personal.methodology || "";
+function evolutionLabel(e) {
+  if (e === "disappear") return "Role likely disappears";
+  if (e === "evolve") return "Role evolves into something new";
+  if (e === "shift") return "Duties shift, role survives";
+  return "—";
+}
 
-  questionEl.innerHTML = `
-    <span class="quiz-q-label">${escapeAttr(personal.question.label)}</span>
-    <div class="quiz-chips" role="radiogroup" aria-label="${escapeAttr(personal.question.label)}">
-      ${personal.question.options
-        .map(
-          (opt) => `
-            <button type="button" class="quiz-chip" role="radio"
-              aria-pressed="false" data-value="${escapeAttr(opt.value)}">${escapeAttr(opt.label)}</button>
-          `
-        )
-        .join("")}
+function renderDoomRingInto(targetEl, pct) {
+  const safe = Math.max(0, Math.min(100, Number(pct) || 0));
+  targetEl.innerHTML = `
+    <div class="doom-ring">
+      <svg class="doom-svg" viewBox="0 0 36 36" aria-hidden="true">
+        <defs>
+          <linearGradient id="personal-doom-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7c5cff" />
+            <stop offset="100%" stop-color="#22d3ee" />
+          </linearGradient>
+        </defs>
+        <circle class="doom-bg" cx="18" cy="18" r="15.9" pathLength="100" />
+        <circle class="doom-fill" cx="18" cy="18" r="15.9" pathLength="100"
+          style="stroke: url(#personal-doom-grad);"
+          stroke-dasharray="${safe.toFixed(1)} 100" />
+      </svg>
+      <span class="doom-value">${Math.round(safe)}%</span>
     </div>
   `;
+}
 
-  if (resultEl) resultEl.hidden = true;
-  if (predictionEl) predictionEl.textContent = "";
-  if (meterEl) meterEl.innerHTML = "";
+function renderPersonalDoomResult(result, inputs) {
+  document.getElementById("pd-verdict").textContent = result.verdict || "(no verdict)";
+  document.getElementById("pd-verdict-for").textContent = inputs.jobTitle
+    ? `for the ${inputs.jobTitle}`
+    : "";
+  document.getElementById("pd-bd-tasks").textContent = `${Math.round(result.tasksAutomatable)}%`;
+  document.getElementById("pd-bd-timeline").textContent = result.timeline || "—";
+  document.getElementById("pd-bd-evolution").textContent = evolutionLabel(result.evolution);
+  document.getElementById("pd-harder").textContent = result.harderToReplace || "";
+  document.getElementById("pd-context").textContent = result.industryContext || "";
+  renderDoomRingInto(document.getElementById("personal-doom-meter"), result.percentage);
+}
 
-  if (personalDoomWired) return;
-  personalDoomWired = true;
+function enableForMyRoleToggle() {
+  const btn = document.querySelector('.quiz-mode-btn[data-mode="for-my-role"]');
+  if (btn) {
+    btn.disabled = false;
+    btn.removeAttribute("data-tip");
+  }
+}
 
-  questionEl.addEventListener("click", (e) => {
+function setupPersonalDoom() {
+  if (personalDoomFormWired) return;
+  const form = document.getElementById("pd-form");
+  const chips = document.getElementById("pd-nature-chips");
+  const submitBtn = document.getElementById("pd-submit");
+  const errorEl = document.getElementById("pd-form-error");
+  const resultEl = document.getElementById("pd-result");
+  const resetBtn = document.getElementById("pd-reset-btn");
+  if (!form || !chips || !submitBtn) return;
+  personalDoomFormWired = true;
+
+  let selectedNature = null;
+
+  chips.addEventListener("click", (e) => {
     const chip = e.target.closest(".quiz-chip");
     if (!chip) return;
-    const chipsParent = chip.closest(".quiz-chips");
-    if (!chipsParent) return;
-    chipsParent
+    chips
       .querySelectorAll(".quiz-chip")
       .forEach((c) => c.setAttribute("aria-pressed", c === chip ? "true" : "false"));
-    const value = chip.dataset.value;
-    const pick = personal.matrix?.[value];
-    if (!pick) return;
-    const pct = Math.max(0, Math.min(100, pick.pDoom));
-    meterEl.innerHTML = `
-      <div class="doom-ring">
-        <svg class="doom-svg" viewBox="0 0 36 36" aria-hidden="true">
-          <defs>
-            <linearGradient id="personal-doom-grad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#7c5cff" />
-              <stop offset="100%" stop-color="#22d3ee" />
-            </linearGradient>
-          </defs>
-          <circle class="doom-bg" cx="18" cy="18" r="15.9" pathLength="100" />
-          <circle class="doom-fill" cx="18" cy="18" r="15.9" pathLength="100"
-            style="stroke: url(#personal-doom-grad);"
-            stroke-dasharray="${pct.toFixed(1)} 100" />
-        </svg>
-        <span class="doom-value">${Math.round(pct)}%</span>
-      </div>
-    `;
-    predictionEl.textContent = pick.prediction || "";
-    resultEl.hidden = false;
+    selectedNature = chip.dataset.value;
+    errorEl.textContent = "";
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errorEl.textContent = "";
+
+    const jobTitle = document.getElementById("pd-job-title").value.trim();
+    const industry = document.getElementById("pd-industry").value.trim();
+
+    if (!jobTitle) {
+      errorEl.textContent = "Job title is required.";
+      return;
+    }
+    if (!selectedNature) {
+      errorEl.textContent = "Pick what kind of role it is.";
+      return;
+    }
+
+    submitBtn.classList.add("loading");
+    submitBtn.disabled = true;
+
+    try {
+      const inputs = { jobTitle, industry, roleNature: selectedNature };
+      const result = await callWorker("doom", inputs);
+
+      personalDoomInputs = inputs;
+      personalDoomResult = result;
+      // Invalidate the For-my-role cache when inputs change
+      forMyRoleToolsResult = null;
+      forMyRoleInputsKey = null;
+      // Also reset the for-my-role panel content so it re-fetches next visit
+      const tEl = document.getElementById("pd-tools-result");
+      if (tEl) {
+        tEl.innerHTML = `<p class="pd-tools-placeholder">Loading recommendations…</p>`;
+      }
+
+      renderPersonalDoomResult(result, inputs);
+      form.hidden = true;
+      resultEl.hidden = false;
+      enableForMyRoleToggle();
+    } catch (err) {
+      errorEl.textContent = err.message || "Generation failed. Try again?";
+    } finally {
+      submitBtn.classList.remove("loading");
+      submitBtn.disabled = false;
+    }
+  });
+
+  resetBtn?.addEventListener("click", () => {
+    resultEl.hidden = true;
+    form.hidden = false;
+  });
+}
+
+function renderForMyRoleTools(result, inputs) {
+  const resultEl = document.getElementById("pd-tools-result");
+  const tools = Array.isArray(result.tools) ? result.tools : [];
+  const cards = tools
+    .map(
+      (t) => `
+        <a class="pd-tool-card" href="${escapeAttr(t.url)}" target="_blank" rel="noopener noreferrer">
+          <div class="pd-tool-name">${escapeAttr(t.name)}</div>
+          <div class="pd-tool-why">${escapeAttr(t.why || "")}</div>
+        </a>
+      `
+    )
+    .join("");
+  resultEl.innerHTML = `
+    ${
+      result.intro
+        ? `<p class="pd-tools-intro">${escapeAttr(result.intro)}</p>`
+        : ""
+    }
+    <div class="pd-tools-grid">${cards}</div>
+    <p class="pd-tools-attrib">Picks for <strong>${escapeAttr(inputs.jobTitle)}</strong> · generated by Claude Sonnet 4 · sincere despite the tone.</p>
+  `;
+}
+
+async function ensureForMyRoleTools(inputs) {
+  const key = `${inputs.jobTitle}|${inputs.industry}|${inputs.roleNature}`;
+  if (forMyRoleToolsResult && forMyRoleInputsKey === key) {
+    renderForMyRoleTools(forMyRoleToolsResult, inputs);
+    return;
+  }
+  const resultEl = document.getElementById("pd-tools-result");
+  resultEl.innerHTML = `<p class="pd-tools-placeholder">Generating recommendations for your role…</p>`;
+  try {
+    const result = await callWorker("tools", inputs);
+    forMyRoleToolsResult = result;
+    forMyRoleInputsKey = key;
+    renderForMyRoleTools(result, inputs);
+  } catch (err) {
+    resultEl.innerHTML = `<p class="pd-tools-error">Couldn't generate recommendations: ${escapeAttr(err.message)}</p>`;
+  }
+}
+
+function setupQuizModeToggle() {
+  const toggle = document.getElementById("quiz-mode-toggle");
+  const generalPanel = document.getElementById("quiz-mode-general");
+  const forMyRolePanel = document.getElementById("quiz-mode-for-my-role");
+  if (!toggle || !generalPanel || !forMyRolePanel) return;
+
+  toggle.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".quiz-mode-btn");
+    if (!btn || btn.disabled) return;
+    const mode = btn.dataset.mode;
+
+    toggle.querySelectorAll(".quiz-mode-btn").forEach((b) =>
+      b.setAttribute("aria-selected", b === btn ? "true" : "false")
+    );
+
+    if (mode === "general") {
+      generalPanel.hidden = false;
+      forMyRolePanel.hidden = true;
+    } else if (mode === "for-my-role") {
+      generalPanel.hidden = true;
+      forMyRolePanel.hidden = false;
+      if (personalDoomInputs) {
+        await ensureForMyRoleTools(personalDoomInputs);
+      }
+    }
   });
 }
 
@@ -1178,4 +1333,6 @@ setupCarousel();
 setupOverview();
 setupViewSwitcher();
 setupNotifications();
+setupPersonalDoom();
+setupQuizModeToggle();
 refresh();

@@ -2050,6 +2050,363 @@ h1 {
   line-height: 1.5;
 }
 
+/* ─── Section 1: How f*cked are you? (AI-driven) ─────────────────────── */
+
+.personal-doom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pd-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pd-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pd-field-label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pd-input {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease;
+}
+
+.pd-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.pd-input::placeholder {
+  color: var(--muted);
+  opacity: 0.7;
+}
+
+.pd-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.pd-submit {
+  position: relative;
+  background:
+    linear-gradient(var(--panel), var(--panel)) padding-box,
+    linear-gradient(90deg, var(--accent), var(--accent-2)) border-box;
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.pd-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(124, 92, 255, 0.25);
+}
+
+.pd-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.pd-submit-spinner {
+  display: none;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(232, 236, 243, 0.25);
+  border-top-color: var(--accent-2);
+  border-radius: 50%;
+  margin-left: 8px;
+  vertical-align: middle;
+  animation: spin 0.7s linear infinite;
+}
+
+.pd-submit.loading .pd-submit-spinner {
+  display: inline-block;
+}
+
+.pd-form-error {
+  color: var(--warn);
+  font-size: 0.85rem;
+}
+
+/* Section 1 result */
+
+.pd-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: quizResultIn 0.32s ease;
+}
+
+.pd-result[hidden] {
+  display: none;
+}
+
+.pd-result-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.pd-verdict-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.pd-verdict-label {
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.pd-verdict {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  background-image:
+    var(--grain-svg),
+    linear-gradient(90deg, var(--accent), var(--accent-2));
+  background-size: 200px 200px, 100% 100%;
+  background-repeat: repeat, no-repeat;
+  background-blend-mode: normal;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.pd-verdict-for {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.pd-breakdown {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.pd-breakdown-item {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pd-breakdown-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.pd-breakdown-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-callout,
+.pd-context {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.pd-callout-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--accent-2);
+  margin: 0 0 8px;
+}
+
+.pd-callout-body {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.pd-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.pd-reset {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.82rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.pd-reset:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.pd-methodology {
+  margin: 0;
+}
+
+/* ─── Section 2: mode toggle + For-my-role panel ─────────────────────── */
+
+.quiz-mode-toggle {
+  display: inline-flex;
+  gap: 4px;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px;
+  margin-bottom: 14px;
+}
+
+.quiz-mode-btn {
+  background: transparent;
+  color: var(--muted);
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: var(--cursor-purple), pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.quiz-mode-btn:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.quiz-mode-btn[aria-selected="true"] {
+  background: linear-gradient(90deg, rgba(124, 92, 255, 0.22), rgba(34, 211, 238, 0.16));
+  color: var(--text);
+  font-weight: 500;
+}
+
+.quiz-mode-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.quiz-mode-panel[hidden] {
+  display: none;
+}
+
+.pd-tools-result {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: quizResultIn 0.28s ease;
+}
+
+.pd-tools-intro {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.pd-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.pd-tool-card {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.pd-tool-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+.pd-tool-name {
+  font-weight: 600;
+  font-size: 0.98rem;
+  color: var(--accent-2);
+}
+
+.pd-tool-why {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.pd-tools-attrib {
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.pd-tools-placeholder,
+.pd-tools-error {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.pd-tools-error {
+  color: var(--warn);
+}
+
 .personal-doom-question {
   margin-bottom: 18px;
 }
