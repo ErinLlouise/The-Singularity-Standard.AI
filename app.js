@@ -9,12 +9,36 @@ let cachedData = null;
 let cachedLeaderboard = null;
 
 const ARENA_CATEGORIES = [
-  { id: "overall",      label: "Overall" },
-  { id: "conversation", label: "The Conversation" },
-  { id: "codebase",     label: "The Codebase" },
-  { id: "image",        label: "The Image" },
-  { id: "reel",         label: "The Reel" },
-  { id: "eye",          label: "The Eye" },
+  {
+    id: "overall",
+    label: "Overall",
+    tip: "War Map across all five categories. Each cell is a lab's rank in that category; Fronts Won counts how many categories they hold #1. Sorted by Fronts Won, then best average rank.",
+  },
+  {
+    id: "conversation",
+    label: "The Conversation",
+    tip: "Text-chat arena (style-controlled). Models compete on open-ended back-and-forth; ratings come from millions of pairwise human votes on which response was better.",
+  },
+  {
+    id: "codebase",
+    label: "The Codebase",
+    tip: "Web-dev / code arena. Models build working code from a prompt and humans pick the better implementation.",
+  },
+  {
+    id: "image",
+    label: "The Image",
+    tip: "Text-to-image arena. Users vote on which generated image better matches the prompt across millions of comparisons.",
+  },
+  {
+    id: "reel",
+    label: "The Reel",
+    tip: "Text-to-video arena. Models generate short clips from a prompt; humans pick the winner.",
+  },
+  {
+    id: "eye",
+    label: "The Eye",
+    tip: "Vision / multimodal arena. Models reason about uploaded images alongside text; users pick whose answer was better.",
+  },
 ];
 
 function getView() {
@@ -277,6 +301,7 @@ function renderLeaderboardArena(leaderboard) {
   const subtabs = ARENA_CATEGORIES.map(
     (c) => `
       <button type="button" class="arena-subtab" data-arena-subtab="${escapeAttr(c.id)}"
+        data-tip="${escapeAttr(c.tip || "")}"
         aria-selected="${c.id === activeSubtab ? "true" : "false"}">${escapeAttr(c.label)}</button>
     `
   ).join("");

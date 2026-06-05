@@ -850,13 +850,10 @@ h1 {
 .arena-meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
-  padding: 10px 14px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  gap: 8px 16px;
+  padding: 0 4px;
   font-size: 0.82rem;
   color: var(--muted);
 }
